@@ -347,6 +347,14 @@
     ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="preturi" />);
     ReactDOM.createRoot(document.getElementById('footer-root')).render(<Footer />);
 
+    /* ============== Stripe Payment Links ============== */
+    // Monthly and lifetime need separate Stripe Payment Links (different products/prices).
+    // Replace the placeholder below with the monthly-specific link once created.
+    const STRIPE_LINKS = {
+      monthly: 'https://buy.stripe.com/fZubJ24P2c4D2Sc3qD63K03',
+      perpetual: 'https://buy.stripe.com/fZubJ24P2c4D2Sc3qD63K03',
+    };
+
     /* ============== Pricing cards + checkout ============== */
     const PricingCards = () => {
       const [checkout, setCheckout] = useState(null); // null | 'monthly' | 'perpetual'
@@ -529,25 +537,24 @@
                   </div>
 
                   {form.method === 'card' && (
-                    <>
-                      <div className="form-field">
-                        <label>Număr card</label>
-                        <input type="text" placeholder="4242 4242 4242 4242" />
-                      </div>
-                      <div className="form-row">
-                        <div className="form-field">
-                          <label>Valabilitate</label>
-                          <input type="text" placeholder="MM / AA" />
+                    <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
+                      <div style={{ padding: '24px 20px', background: 'var(--bg-0)', borderRadius: 8, border: '1px solid var(--border)', marginBottom: 12 }}>
+                        <div style={{ width: 48, height: 48, background: 'var(--gold-bg)', border: '1px solid var(--gold-soft)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--gold)', margin: '0 auto 14px' }}>
+                          <MIcon name="lock" size={20} />
                         </div>
-                        <div className="form-field">
-                          <label>CVC</label>
-                          <input type="text" placeholder="123" />
-                        </div>
+                        <p style={{ fontSize: 14, color: 'var(--text)', margin: '0 0 8px', fontWeight: 500 }}>
+                          Plată securizată prin Stripe
+                        </p>
+                        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
+                          Veți fi redirecționat la Stripe. Cheia de licență se trimite automat pe{' '}
+                          <b style={{ color: 'var(--gold)' }}>{form.email || 'email-ul introdus'}</b>{' '}
+                          imediat după confirmarea plății.
+                        </p>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.06em' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.06em' }}>
                         <MIcon name="lock" size={11} /> CRIPTAT TLS · PROCESAT DE STRIPE · 3D SECURE
                       </div>
-                    </>
+                    </div>
                   )}
 
                   {form.method === 'transfer' && (
@@ -586,9 +593,20 @@
               <div style={{ flex: 1 }}></div>
               {step === 4 ? (
                 <button className="btn btn-primary" onClick={onClose}>Închide</button>
+              ) : step === 3 && form.method === 'card' ? (
+                <a
+                  href={`${STRIPE_LINKS[plan]}?prefilled_email=${encodeURIComponent(form.email)}&client_reference_id=${plan}`}
+                  className="btn btn-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setTimeout(onClose, 600)}
+                >
+                  Plătește €{total} prin Stripe
+                  <MIcon name="arrow-right" size={13} />
+                </a>
               ) : (
                 <button className="btn btn-primary" onClick={next}>
-                  {step === 3 ? (form.method === 'card' ? `Plătește €${total}` : 'Confirmă comanda') : 'Continuă'}
+                  {step === 3 ? 'Confirmă comanda' : 'Continuă'}
                   <MIcon name="arrow-right" size={13} />
                 </button>
               )}

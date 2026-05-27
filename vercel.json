@@ -6,5 +6,11 @@
     { "source": "/functionalitati", "destination": "/functionalitati.html" },
     { "source": "/ajutor", "destination": "/ajutor.html" },
     { "source": "/descarcare", "destination": "/descarcare.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    }
   ]
 }
