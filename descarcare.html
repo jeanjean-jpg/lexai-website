@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEX·AI — Descarcă</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .download-hero { padding: 64px 0 32px; text-align: center; }
+    .download-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 880px;
+      margin: 40px auto 0;
+    }
+    .dl-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex; flex-direction: column;
+      gap: 18px;
+      transition: all 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+    .dl-card.primary {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 1px rgba(220,180,60,0.3), 0 16px 40px rgba(0,0,0,0.4);
+    }
+    .dl-card.primary::before {
+      content: 'RECOMANDAT';
+      position: absolute;
+      top: 16px; right: 16px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      padding: 3px 8px;
+      background: var(--gold);
+      color: #1a1308;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .dl-card .os-icon {
+      width: 56px; height: 56px;
+      display: grid; place-items: center;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+    }
+    .dl-card.primary .os-icon {
+      background: var(--gold-bg);
+      border-color: rgba(220,180,60,0.3);
+      color: var(--gold);
+    }
+    .dl-card .os-name { font-size: 22px; font-weight: 600; }
+    .dl-card .os-version {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+    .dl-card .os-version b { color: var(--gold); }
+    .dl-card .file-info {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .dl-card .file-info .fi-row {
+      display: flex; justify-content: space-between;
+    }
+    .dl-card .file-info .fi-label { color: var(--text-dim); }
+    .dl-card .file-info .fi-value { color: var(--text); }
+    .dl-card .checksum {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--gold);
+      word-break: break-all;
+      line-height: 1.45;
+    }
+    .dl-card .checksum b { color: var(--text-dim); font-weight: 400; display: block; margin-bottom: 4px; }
+
+    /* System requirements */
+    .sys-req {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      max-width: 880px;
+      margin: 56px auto 0;
+    }
+    .sys-req h3 { font-size: 1.15rem; margin-bottom: 16px; }
+    .sys-req-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .req-cell {
+      padding: 14px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+    }
+    .req-cell .rc-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .req-cell .rc-value { font-size: 13.5px; color: var(--text); font-weight: 500; }
+    .req-cell .rc-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Release notes */
+    .release-notes {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      max-width: 880px;
+      margin: 32px auto 0;
+    }
+    .release-notes .rn-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .release-notes .rn-head .rn-version {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+    }
+    .release-notes .rn-date {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+    }
+    .release-notes h4 { font-size: 13px; color: var(--gold); margin: 16px 0 8px; font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+    .release-notes h4:first-child { margin-top: 0; }
+    .release-notes ul { padding-left: 22px; margin: 0 0 12px; color: var(--text-muted); font-size: 13.5px; line-height: 1.65; }
+    .release-notes ul li { margin-bottom: 4px; }
+    .release-notes ul li strong { color: var(--text); }
+
+    /* Install steps */
+    .install-guide {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 32px;
+      max-width: 880px;
+      margin: 32px auto 0;
+    }
+    .install-step {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      padding: 14px 0;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+    }
+    .install-step:last-child { border-bottom: 0; }
+    .install-step .is-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      display: grid; place-items: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .install-step .is-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+    .install-step .is-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+    .install-step .is-desc code {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      background: var(--bg-2);
+      padding: 2px 5px;
+      border-radius: 3px;
+      color: var(--gold);
+      border: 1px solid var(--border);
+    }
+
+    /* Help banner */
+    .help-banner {
+      max-width: 880px;
+      margin: 32px auto 0;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, var(--gold-bg), transparent);
+      border: 1px solid rgba(220,180,60,0.25);
+      border-radius: 10px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .help-banner .hb-icon {
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-dim);
+      border-radius: 8px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .help-banner .hb-text { flex: 1; }
+    .help-banner .hb-title { font-weight: 600; font-size: 14px; }
+    .help-banner .hb-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+
+    @media (max-width: 700px) {
+      .download-grid { grid-template-columns: 1fr; }
+      .sys-req-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <!-- Hero -->
+  <section class="download-hero">
+    <div class="container-narrow">
+      <div class="kicker" style="justify-content: center; display: inline-flex;">Descarcă · LEX AI v1.0.3</div>
+      <h1 style="margin-top: 16px;">Instalează-l în 5 minute.</h1>
+      <p class="lead" style="max-width: 580px; margin: 16px auto 0;">
+        Trial gratuit 30 de zile cu toate funcționalitățile. Fără card. Aduci propria cheie API Anthropic.
+      </p>
+    </div>
+
+    <!-- Download cards -->
+    <div class="container">
+      <div class="download-grid">
+        <!-- Windows -->
+        <div class="dl-card primary">
+          <div class="os-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M0 3.5l9.75-1.32V11.5H0V3.5zm10.91-1.5L24 0v11.5H10.91V2zM0 12.5h9.75v9.32L0 20.5v-8zm10.91 0H24V24l-13.09-1.82V12.5z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="os-name">Windows</div>
+            <div class="os-version">v<b>1.0.3</b> · build 2034 · 64-bit · Squirrel installer</div>
+          </div>
+          <div class="file-info">
+            <div class="fi-row"><span class="fi-label">Fișier</span><span class="fi-value">LexAI-Setup-1.0.3.exe</span></div>
+            <div class="fi-row"><span class="fi-label">Dimensiune</span><span class="fi-value">142 MB</span></div>
+            <div class="fi-row"><span class="fi-label">Compatibil</span><span class="fi-value">Win 10 / 11 · x64</span></div>
+            <div class="fi-row"><span class="fi-label">Semnătură</span><span class="fi-value" style="color: var(--green)">✓ Authenticode</span></div>
+          </div>
+          <div>
+            <a href="#" class="btn btn-primary btn-lg" style="width: 100%;" onclick="event.preventDefault()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+              Descarcă pentru Windows
+            </a>
+          </div>
+          <div class="checksum">
+            <b>SHA-256</b>
+            8f3c9b4e7d2a5f6c1e9b3a8d5c7f2e4b9d6a1c3e5f8b2d4a7c9e1b3d5f7a9c2e
+          </div>
+        </div>
+
+        <!-- macOS -->
+        <div class="dl-card">
+          <div class="os-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="os-name">macOS</div>
+            <div class="os-version">v<b>1.0.3</b> · build 2034 · Universal · DMG</div>
+          </div>
+          <div class="file-info">
+            <div class="fi-row"><span class="fi-label">Fișier</span><span class="fi-value">LexAI-1.0.3.dmg</span></div>
+            <div class="fi-row"><span class="fi-label">Dimensiune</span><span class="fi-value">158 MB</span></div>
+            <div class="fi-row"><span class="fi-label">Compatibil</span><span class="fi-value">macOS 12+ · Intel + Apple Silicon</span></div>
+            <div class="fi-row"><span class="fi-label">Semnătură</span><span class="fi-value" style="color: var(--green)">✓ Notarizat Apple</span></div>
+          </div>
+          <div>
+            <a href="#" class="btn btn-secondary btn-lg" style="width: 100%;" onclick="event.preventDefault()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+              Descarcă pentru macOS
+            </a>
+          </div>
+          <div class="checksum">
+            <b>SHA-256</b>
+            a2c5e8b1f4d7c9a3e6b9d2f5c8a1e4b7d0c3f6a9e2b5d8c1f4a7e0b3d6c9f2a5
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- System requirements -->
+  <section style="padding: 32px 0;">
+    <div class="container">
+      <div class="sys-req">
+        <h3>Cerințe de sistem</h3>
+        <div class="sys-req-grid">
+          <div class="req-cell">
+            <div class="rc-label">Sistem operare</div>
+            <div class="rc-value">Win 10/11 · macOS 12+</div>
+            <div class="rc-sub">64-bit obligatoriu</div>
+          </div>
+          <div class="req-cell">
+            <div class="rc-label">RAM</div>
+            <div class="rc-value">4 GB minim</div>
+            <div class="rc-sub">8 GB recomandat</div>
+          </div>
+          <div class="req-cell">
+            <div class="rc-label">Stocare</div>
+            <div class="rc-value">2 GB liber</div>
+            <div class="rc-sub">+ spațiu pentru index</div>
+          </div>
+          <div class="req-cell">
+            <div class="rc-label">Internet</div>
+            <div class="rc-value">Necesar pentru API</div>
+            <div class="rc-sub">Corpusul e offline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Release notes -->
+  <section style="padding: 32px 0;">
+    <div class="container">
+      <div class="release-notes">
+        <div class="rn-head">
+          <div>
+            <span class="rn-version">v1.0.3 · STABLE</span>
+          </div>
+          <span class="rn-date">12 MAI 2026</span>
+        </div>
+
+        <h4>Funcționalități noi</h4>
+        <ul>
+          <li><strong>Mod ORCHESTRAT</strong> — agentul coordonator descompune sarcini complexe și le delegă paralel către alți agenți</li>
+          <li><strong>Cercetare Juridică</strong> — agent nou pe claude-opus-4-7 pentru memo-uri și analize aprofundate</li>
+          <li><strong>OCR Tesseract</strong> — text extras din PDF scanate și imagini (română + engleză)</li>
+          <li><strong>Monitor RSS Monitorul Oficial</strong> — notificări automate pentru legi noi</li>
+        </ul>
+
+        <h4>Îmbunătățiri</h4>
+        <ul>
+          <li>Corpus juridic actualizat la versiunile în vigoare 05/2026 (+312 articole noi)</li>
+          <li>Retrieval BM25 cu stemming românesc — relevanță îmbunătățită cu ~18%</li>
+          <li>Generare DOCX cu stiluri ierarhice corecte (Heading 1-3, listă numerotată, diacritice)</li>
+          <li>UI: panou notificări reproiectat, scurtături tastatură (⌘K căutare globală)</li>
+          <li>Performanță: indexare inițială ~40% mai rapidă</li>
+        </ul>
+
+        <h4>Bug fixes</h4>
+        <ul>
+          <li>Fixed: crash la deschidere PDF-uri cu structură non-standard</li>
+          <li>Fixed: rezumate Haiku trunchiate la documente lungi (&gt;50 pagini)</li>
+          <li>Fixed: detectare termene incorectă pentru date în format DD.MM.YYYY</li>
+          <li>Fixed: backup automat ratat după modificarea zonei de timp</li>
+        </ul>
+
+        <h4>Securitate</h4>
+        <ul>
+          <li>Actualizare dependențe Electron 28.3 → 28.4 (CVE-2026-0123)</li>
+          <li>Validare strictă URL-uri pentru fetch agent (whitelist domenii)</li>
+          <li>SQLCipher opțional activabil pentru baza de date</li>
+        </ul>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em;">
+          ▸ <a href="#" style="color: var(--gold)">Istoric complet versiuni</a> · changelog GitHub
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Install guide -->
+  <section style="padding: 32px 0;">
+    <div class="container">
+      <div class="install-guide">
+        <h3 style="margin-bottom: 16px;">Ghid de instalare — Windows</h3>
+
+        <div class="install-step">
+          <div class="is-num">01</div>
+          <div>
+            <div class="is-title">Descarcă instalatorul</div>
+            <div class="is-desc">Apasă butonul <code>Descarcă pentru Windows</code> de sus. Fișierul <code>LexAI-Setup-1.0.3.exe</code> se salvează în <code>Downloads</code>.</div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="is-num">02</div>
+          <div>
+            <div class="is-title">Verifică checksum-ul (opțional dar recomandat)</div>
+            <div class="is-desc">Deschide PowerShell în folderul Downloads și rulează:<br/><code style="display: inline-block; margin-top: 6px;">Get-FileHash LexAI-Setup-1.0.3.exe -Algorithm SHA256</code><br/>Compară rezultatul cu valoarea SHA-256 afișată sub butonul de download.</div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="is-num">03</div>
+          <div>
+            <div class="is-title">Lansează instalatorul</div>
+            <div class="is-desc">Dublu-click pe <code>LexAI-Setup-1.0.3.exe</code>. Squirrel instalează aplicația în <code>%LOCALAPPDATA%\LexAI</code> fără prompt UAC (per-user install). Durează ~30 secunde.</div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="is-num">04</div>
+          <div>
+            <div class="is-title">Pornește LEX AI</div>
+            <div class="is-desc">Aplicația se deschide automat după instalare și creează un shortcut pe Desktop și în Start Menu. La prima rulare, va indexa corpusul juridic intern (~5 minute, doar o singură dată).</div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="is-num">05</div>
+          <div>
+            <div class="is-title">Configurează cheia API Anthropic</div>
+            <div class="is-desc">Setări → API Key → lipește cheia ta de la <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> (începe cu <code>sk-ant-api03-</code>) → Validează și salvează. Cheia se criptează cu DPAPI și nu părăsește calculatorul.</div>
+          </div>
+        </div>
+
+        <div class="install-step">
+          <div class="is-num">06</div>
+          <div>
+            <div class="is-title">Indexează primul folder</div>
+            <div class="is-desc">Setări → Foldere → <code>+ Folder</code> → selectează un director cu modele sau cazuri. Indexarea pornește în background. Acum poți deschide un chat cu primul agent.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help banner -->
+      <div class="help-banner">
+        <div class="hb-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/>
+          </svg>
+        </div>
+        <div class="hb-text">
+          <div class="hb-title">Ai nevoie de ajutor la instalare?</div>
+          <div class="hb-sub">Verifică <a href="/ajutor" style="color: var(--gold)">documentația completă</a> sau scrie-ne la <a href="mailto:support@lexai.ro" style="color: var(--gold)">support@lexai.ro</a> — răspundem în câteva ore lucrătoare.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container-narrow">
+      <h2>După trial — decizi ce ți se potrivește.</h2>
+      <p>30 de zile gratuite, fără card. La final, alegi abonamentul lunar sau licența perpetuă.</p>
+      <div class="hero-ctas">
+        <a href="/preturi" class="btn btn-secondary btn-lg">Vezi prețurile</a>
+        <a href="/functionalitati" class="btn btn-ghost btn-lg">Vezi funcționalitățile</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+  <script type="text/babel">
+    const { Nav, Footer } = window;
+    ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="descarcare" />);
+    ReactDOM.createRoot(document.getElementById('footer-root')).render(<Footer />);
+  </script>
+</body>
+</html>

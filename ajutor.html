@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEX·AI — Ajutor și documentație</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { overflow-y: scroll; }
+
+    .help-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      gap: 56px;
+      align-items: flex-start;
+    }
+    /* Sidebar nav */
+    .help-sidebar {
+      position: sticky;
+      top: calc(var(--nav-h) + 32px);
+      height: calc(100vh - var(--nav-h) - 64px);
+      overflow-y: auto;
+      padding-right: 16px;
+      font-size: 13.5px;
+    }
+    .help-sidebar::-webkit-scrollbar { width: 4px; }
+    .help-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .help-sidebar h4 {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 28px 0 10px;
+      padding-left: 14px;
+    }
+    .help-sidebar h4:first-child { margin-top: 0; }
+    .help-sidebar a {
+      display: block;
+      padding: 6px 14px;
+      color: var(--text-muted);
+      border-left: 2px solid transparent;
+      transition: all 0.12s;
+      line-height: 1.4;
+    }
+    .help-sidebar a:hover { color: var(--text); border-left-color: var(--border-strong); }
+    .help-sidebar a.active {
+      color: var(--gold);
+      border-left-color: var(--gold);
+      background: var(--gold-bg);
+    }
+    .help-sidebar a.sub { padding-left: 28px; font-size: 12.5px; }
+
+    /* Content */
+    .help-content {
+      max-width: 760px;
+      padding: 24px 0 120px;
+    }
+    .help-content h1 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 8px; }
+    .help-content h2 {
+      font-size: 1.6rem;
+      margin: 56px 0 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .help-content h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 32px; }
+    .help-content h3 {
+      font-size: 1.2rem;
+      margin: 32px 0 12px;
+      color: var(--gold);
+    }
+    .help-content h4 {
+      font-size: 14px;
+      margin: 24px 0 8px;
+      color: var(--text);
+    }
+    .help-content p { margin-bottom: 14px; color: var(--text-muted); line-height: 1.7; }
+    .help-content ul { margin: 0 0 16px; padding-left: 22px; color: var(--text-muted); }
+    .help-content ul li { margin-bottom: 6px; }
+    .help-content strong { color: var(--text); font-weight: 500; }
+    .help-content code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: var(--bg-2);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: var(--gold);
+      border: 1px solid var(--border);
+    }
+    .help-content a { color: var(--gold); text-decoration: underline; text-decoration-color: var(--gold-dim); }
+    .help-content a:hover { text-decoration-color: var(--gold); }
+    .help-content .lead { font-size: 1.05rem; color: var(--text); margin-bottom: 24px; }
+
+    .toc-anchor { scroll-margin-top: 100px; }
+
+    /* Boxes */
+    .note-box {
+      border-left: 3px solid var(--gold);
+      background: var(--gold-bg);
+      padding: 14px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 13.5px;
+    }
+    .note-box .nb-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .warn-box {
+      border-left: 3px solid var(--red);
+      background: rgba(232,138,138,0.06);
+      padding: 14px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 13.5px;
+    }
+    .warn-box .nb-label { color: var(--red); }
+
+    /* Steps */
+    .steps-list { counter-reset: step; padding-left: 0; list-style: none; }
+    .steps-list li {
+      counter-increment: step;
+      padding: 12px 0 12px 48px;
+      position: relative;
+    }
+    .steps-list li::before {
+      content: counter(step, decimal-leading-zero);
+      position: absolute;
+      left: 0; top: 12px;
+      width: 32px; height: 32px;
+      background: var(--bg-2);
+      border: 1px solid var(--gold-dim);
+      border-radius: 50%;
+      color: var(--gold);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      display: grid; place-items: center;
+    }
+    .steps-list li strong { display: block; margin-bottom: 4px; color: var(--text); }
+
+    /* Agent details — collapsible cards */
+    .agent-doc {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .agent-doc-head {
+      padding: 16px 20px;
+      background: transparent;
+      border: 0; width: 100%;
+      display: flex; gap: 14px; align-items: center;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .agent-doc-head:hover { background: var(--bg-2); }
+    .agent-doc-head .ring-sm {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(220,180,60,0.18), rgba(220,180,60,0.04));
+      border: 1px solid rgba(220,180,60,0.4);
+      color: var(--gold);
+      display: grid; place-items: center;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      flex-shrink: 0;
+    }
+    .agent-doc-head .ring-sm.opus {
+      background: radial-gradient(circle, rgba(180,120,220,0.2), rgba(180,120,220,0.04));
+      border-color: rgba(180,120,220,0.5);
+      color: #c8a8e0;
+    }
+    .agent-doc-head .ad-meta { flex: 1; }
+    .agent-doc-head .ad-name { font-weight: 600; font-size: 15px; color: var(--text); }
+    .agent-doc-head .ad-domain {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+    .agent-doc-head .toggle {
+      width: 24px; height: 24px;
+      display: grid; place-items: center;
+      color: var(--gold);
+      transition: transform 0.2s;
+    }
+    .agent-doc.open .agent-doc-head .toggle { transform: rotate(45deg); }
+    .agent-doc-body {
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s, padding 0.3s;
+    }
+    .agent-doc.open .agent-doc-body { padding: 0 20px 20px; max-height: 1200px; }
+    .agent-doc-body h5 {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      margin: 16px 0 8px;
+    }
+    .agent-doc-body .ex-prompt {
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .agent-doc-body .ex-prompt::before {
+      content: '▸ ';
+      color: var(--gold);
+    }
+
+    /* Code block */
+    pre.code {
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--text);
+      overflow-x: auto;
+      margin: 16px 0;
+      line-height: 1.55;
+    }
+    pre.code .k { color: var(--gold); }
+    pre.code .c { color: var(--text-dim); }
+    pre.code .s { color: #6e9c7f; }
+
+    /* Codes table for legi */
+    .codes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    .code-row {
+      padding: 10px 14px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--gold-dim);
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .code-row .code-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      display: block;
+    }
+    .code-row .code-title { color: var(--text); margin-top: 2px; }
+
+    @media (max-width: 900px) {
+      .help-layout { grid-template-columns: 1fr; gap: 0; }
+      .help-sidebar { display: none; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <div class="help-layout" style="padding-top: 48px;">
+    <!-- Sidebar nav -->
+    <aside class="help-sidebar" id="help-sidebar"></aside>
+
+    <!-- Content -->
+    <main class="help-content">
+      <h1>Ajutor și documentație</h1>
+      <p class="lead">Ghid complet LEX AI v1.0 — instalare, configurare, agenți, dosare, securitate. Caută în pagină cu Ctrl+F sau folosește meniul lateral.</p>
+
+      <!-- Introducere -->
+      <h2 id="introducere" class="toc-anchor">Introducere</h2>
+
+      <h3 id="ce-este">Ce este LEX AI?</h3>
+      <p>LEX AI este o aplicație desktop pentru cabinete de avocatură din România, care oferă asistență juridică prin AI. Folosește modele Claude de la Anthropic, dar rulează complet pe calculatorul tău — datele clienților, dosarele și conversațiile nu ajung pe servere externe.</p>
+      <p>Aplicația include 9 agenți AI specializați pe ramuri ale dreptului român, un corpus juridic intern cu peste 5.000 de articole din coduri, sistem de gestionare dosare, urmărire termene și generare automată de documente juridice.</p>
+
+      <h3 id="cerinte">Cerințe de sistem</h3>
+      <ul>
+        <li><strong>Windows 10 sau 11</strong> (build oficial); macOS 12+ (build secundar)</li>
+        <li><strong>4 GB RAM</strong> minim, <strong>8 GB recomandat</strong> pentru indexare documente</li>
+        <li><strong>2 GB spațiu liber</strong> pentru aplicație + corpus juridic</li>
+        <li><strong>Conexiune internet</strong> pentru API Anthropic (nu este necesară pentru corpusul juridic intern)</li>
+        <li><strong>Cheie API Anthropic</strong> obținută de la console.anthropic.com</li>
+      </ul>
+
+      <h3 id="primii-pasi">Primii pași după instalare</h3>
+      <ol class="steps-list">
+        <li><strong>Descarcă și instalează</strong> — aplicația folosește instalator Squirrel pe Windows (1-click), DMG pe macOS</li>
+        <li><strong>Introduce cheia API Anthropic</strong> — Setări → API Key (vezi secțiunea Configurare inițială)</li>
+        <li><strong>Configurează numele cabinetului</strong> — va apărea în documentele generate și antetele AI</li>
+        <li><strong>Indexează primul folder</strong> — Setări → Foldere → Adaugă (recomand un folder de modele și unul de cazuri)</li>
+        <li><strong>Creează primul agent</strong> — Tab Agenți → Adaugă din template (ex. Avocat Civil)</li>
+        <li><strong>Pornește o conversație</strong> — selectează agentul, scrie întrebarea</li>
+      </ol>
+
+      <!-- Configurare initiala -->
+      <h2 id="configurare" class="toc-anchor">Configurare inițială</h2>
+
+      <h3 id="cheie-api">Pasul 1: Cheia API Anthropic</h3>
+      <p>LEX AI folosește modelele Claude de la Anthropic. Plătești Anthropic direct pe baza utilizării — costul este separat de licența LEX AI.</p>
+
+      <h4>Cum obții cheia</h4>
+      <ol class="steps-list">
+        <li>Mergi la <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> și creează un cont</li>
+        <li>Adaugă o metodă de plată (card bancar)</li>
+        <li>Mergi la <strong>API Keys</strong> și apasă <code>Create Key</code></li>
+        <li>Copiază cheia generată (începe cu <code>sk-ant-api03-...</code>)</li>
+      </ol>
+
+      <h4>Configurare în LEX AI</h4>
+      <p>Deschide aplicația → <code>Setări</code> → <code>API Key</code> → Lipește cheia → <code>Validează și salvează</code>. Cheia este criptată local cu DPAPI (Windows) sau Keychain (macOS).</p>
+
+      <div class="note-box">
+        <div class="nb-label">Cost estimativ</div>
+        Pentru un cabinet de avocatură cu utilizare normală — estimare €10-40 / lună. Haiku (rezumate documente) este foarte ieftin; Sonnet (chat) este moderat; Opus (cercetare juridică) este premium. Vezi <a href="https://www.anthropic.com/pricing" target="_blank" rel="noopener">anthropic.com/pricing</a> pentru tarifele exacte actualizate.
+      </div>
+
+      <h3 id="profil-firma">Pasul 2: Profilul cabinetului</h3>
+      <p>Numele cabinetului apare în:</p>
+      <ul>
+        <li>Antetul documentelor generate (cereri, întâmpinări, notificări)</li>
+        <li>Semnătura comunicărilor agenților</li>
+        <li>Backup-uri (denumire fișiere)</li>
+        <li>Titlebar-ul aplicației</li>
+      </ul>
+      <p>Setări → <code>Cabinet</code> → completează: denumire, sediu, CUI, persoană de contact, email cabinet. Aceste informații rămân local și nu sunt trimise nicăieri în afara documentelor pe care le generezi tu.</p>
+
+      <h3 id="primul-agent">Pasul 3: Creează primul agent</h3>
+      <p>Tab <code>Agenți</code> → <code>+ Adaugă</code> → alege:</p>
+      <ul>
+        <li><strong>Template</strong> — unul dintre cele 9 disponibile sau <em>Custom</em></li>
+        <li><strong>Model</strong> — Haiku (rapid, ieftin), Sonnet (echilibrat), Opus (profund)</li>
+        <li><strong>Acces foldere</strong> — bifează folderele pe care agentul le poate citi</li>
+        <li><strong>Acces web</strong> — pornit / oprit (per agent)</li>
+        <li><strong>Note persistente</strong> — text adițional injectat la fiecare conversație</li>
+      </ul>
+
+      <!-- Agenți -->
+      <h2 id="agenti" class="toc-anchor">Agenți juridici</h2>
+      <p>Un agent este un assistant AI cu un prompt configurat pentru o ramură specifică de drept. Agentul vede contextul fiecărei conversații: dosarul (dacă e selectat), documentele atașate, agenda activă, și cele 12 articole din corpus retrieved automat pentru fiecare întrebare.</p>
+
+      <h3 id="cum-functioneaza">Cum funcționează un agent</h3>
+      <p>Când scrii un mesaj, sistemul:</p>
+      <ol class="steps-list">
+        <li><strong>Caută în corpusul juridic</strong> — BM25 retrieval, top 12 articole relevante</li>
+        <li><strong>Citește contextul dosarului</strong> — dacă conversația e legată la un dosar</li>
+        <li><strong>Adaugă agenda activă</strong> — termene din 30 zile</li>
+        <li><strong>Trimite la Claude</strong> — promptul agentului + contextul + mesajul tău</li>
+        <li><strong>Procesează răspunsul</strong> — detectează blocuri de documente, termene, comenzi către alți agenți</li>
+      </ol>
+
+      <h3 id="tipuri-agenti">Cei 9 agenți disponibili</h3>
+      <p>Apasă pe fiecare card pentru detalii complete — domeniu, exemple, când să escaladezi la alt agent.</p>
+
+      <div id="agents-doc-root"></div>
+
+      <h3 id="agent-custom">Crearea unui agent personalizat</h3>
+      <p>Pe lângă cele 9 template-uri, poți crea agenți custom cu prompt propriu. Util pentru:</p>
+      <ul>
+        <li>Specializare îngustă (ex. <em>Drept Sportiv</em>, <em>Drept Maritim</em>)</li>
+        <li>Stil de comunicare specific (ex. agent care răspunde doar pe scurt, bullet-points)</li>
+        <li>Limbi străine (ex. agent care răspunde în engleză pentru clienții străini)</li>
+        <li>Roluri auxiliare (ex. <em>Verificator citări</em>, <em>Calculator termene</em>)</li>
+      </ul>
+      <p>Limita: maxim <strong>15 agenți custom</strong> per instalare. Cei 9 built-in sunt în plus.</p>
+
+      <h3 id="mod-activ">Modul ACTIV — colaborare între agenți</h3>
+      <p>Când e activat, un agent primar poate trimite întrebări laterale către alți agenți în timpul unei conversații, fără intervenția ta. Util când o întrebare are componente multidisciplinare.</p>
+
+      <p><strong>Exemplu</strong>: ceri Avocatului Penal o cerere de recurs care include un capăt civil cu calcul de prejudiciu fiscal. Avocatul Penal cere automat:</p>
+      <ul>
+        <li>Avocat Civil → analiză temei răspundere</li>
+        <li>Drept Fiscal → calcul prejudiciu și accesorii</li>
+      </ul>
+      <p>Sinteza apare ca un singur răspuns coordonat, cu marcaj transparent în UI care arată ce agenți au contribuit la ce parte.</p>
+
+      <h3 id="mod-orchestrat">Modul ORCHESTRAT</h3>
+      <p>Variantă mai puternică decât ACTIV. Agentul primar devine coordonator, descompune sarcina în sub-task-uri și le delegă paralel. Folosit pentru:</p>
+      <ul>
+        <li>Analize complexe care necesită expertiză din 3+ ramuri</li>
+        <li>Generarea de documente lungi cu secțiuni specializate</li>
+        <li>Due diligence pre-tranzacțional</li>
+      </ul>
+      <p>Costul de tokeni este mai mare (multiple apeluri API). Recomandat doar când e nevoie.</p>
+
+      <h3 id="limite-sfaturi">Limite și sfaturi</h3>
+      <div class="warn-box">
+        <div class="nb-label">Atenție</div>
+        AI-ul poate genera răspunsuri convingătoare dar incorecte. Verifică <strong>întotdeauna</strong> referințele legale pe <a href="https://legislatie.just.ro" target="_blank" rel="noopener">legislatie.just.ro</a> pentru versiunea în vigoare. Corpusul intern conține textul la momentul descărcării — modificările legislative ulterioare pot să nu fie reflectate.
+      </div>
+
+      <ul>
+        <li>Întreabă specific. "Care e termenul de prescripție pentru X?" e mai bun decât "Spune-mi despre prescripție."</li>
+        <li>Atașează documentele relevante. Agentul vede mai bine cu context.</li>
+        <li>Verifică articolele citate. Sistemul minimizează halucinațiile prin injecție de context, dar nu garantează corectitudinea pe 100%.</li>
+        <li>Folosește dosare. Conversațiile legate la dosar produc răspunsuri mai relevante.</li>
+      </ul>
+
+      <!-- Corpus -->
+      <h2 id="corpus" class="toc-anchor">Corpus juridic</h2>
+
+      <h3 id="ce-corpus">Ce este corpusul juridic intern</h3>
+      <p>O bază de date SQLite locală cu peste 5.000 de articole din principalele coduri și legi românești, indexată cu FTS5 (full-text search) și ranking BM25.</p>
+
+      <h3 id="coduri-incluse">Codurile și legile incluse</h3>
+      <div class="codes-grid">
+        <div class="code-row"><span class="code-num">L. 287/2009</span><span class="code-title">Cod Civil — 2.412 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 286/2009</span><span class="code-title">Cod Penal — 446 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 134/2010</span><span class="code-title">Cod Proc. Civilă — 1.116 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 135/2010</span><span class="code-title">Cod Proc. Penală — 605 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 227/2015</span><span class="code-title">Cod Fiscal — 498 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 207/2015</span><span class="code-title">Cod Proc. Fiscală — 354 art.</span></div>
+        <div class="code-row"><span class="code-num">OUG 57/2019</span><span class="code-title">Cod Administrativ — 170 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 53/2003</span><span class="code-title">Cod Muncii — 281 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 31/1990</span><span class="code-title">Societăți — 296 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 85/2014</span><span class="code-title">Insolvență — 348 art.</span></div>
+        <div class="code-row"><span class="code-num">L. 554/2004</span><span class="code-title">Contencios admin.</span></div>
+        <div class="code-row"><span class="code-num">L. 7/1996</span><span class="code-title">Cadastru și publicitate</span></div>
+        <div class="code-row"><span class="code-num">L. 272/2004</span><span class="code-title">Protecția copilului</span></div>
+        <div class="code-row"><span class="code-num">L. 98/2016</span><span class="code-title">Achiziții publice</span></div>
+      </div>
+
+      <h3 id="cum-cauta">Cum funcționează căutarea automată</h3>
+      <p>Sistemul folosește FTS5 (SQLite full-text search 5) cu ranking BM25 — același algoritm folosit de Lucene și Elasticsearch. Pentru fiecare mesaj scris în chat:</p>
+      <pre class="code"><span class="c"># Pipeline retrieval — simplificat</span>
+<span class="k">query</span> = preprocess(user_message)
+<span class="c"># tokenizare + diacritice + stem românesc</span>
+
+<span class="k">candidates</span> = sqlite.execute(
+  <span class="s">"SELECT art_id, snippet(corpus, ...) "
+  "FROM corpus_fts WHERE corpus_fts MATCH ? "
+  "ORDER BY bm25(corpus_fts) LIMIT 12"</span>,
+  [query]
+)
+
+<span class="k">context</span> = inject_into_prompt(candidates)
+<span class="c"># articolele apar ca CONTEXT VERIFICAT înainte de întrebare</span></pre>
+
+      <h3 id="adauga-surse">Adăugare surse externe</h3>
+      <p>Setări → <code>Corpus Juridic</code> → <code>+ Adaugă</code>:</p>
+      <ul>
+        <li><strong>URL</strong> — link către lege pe legislatie.just.ro sau alt portal oficial; aplicația parsează HTML-ul și extrage articolele</li>
+        <li><strong>Fișier</strong> — PDF / DOCX / TXT cu text de lege; recunoaște automat structura "Art. N." și "alin. (X)"</li>
+        <li><strong>Decizii</strong> — decizii ICCJ, CCR, CJUE adăugate ca articole speciale (citabile distinct)</li>
+      </ul>
+
+      <h3 id="limitari-corpus">Limitări</h3>
+      <p>Corpusul conține textul la momentul descărcării. Modificările legislative ulterioare (ex. OUG-uri publicate săptămâna trecută) nu apar până la următoarea actualizare a aplicației sau adăugarea manuală. Pentru legi noi recente, folosește monitorul RSS al Monitorului Oficial (vezi secțiunea Setări).</p>
+
+      <!-- Documente -->
+      <h2 id="documente" class="toc-anchor">Documente și fișiere</h2>
+
+      <h3 id="adaugare-foldere">Adăugarea folderelor supravegheate</h3>
+      <p>Tab <code>Fișiere</code> → <code>+ Folder</code> → selectează un director. Aplicația indexează recursiv toate fișierele compatibile și le supraveghează pentru schimbări (file watcher).</p>
+
+      <h3 id="formate">Formate suportate</h3>
+      <ul>
+        <li><code>.pdf</code> — text extras + OCR Tesseract dacă PDF e scanat</li>
+        <li><code>.docx</code> — text + structură (titluri, liste)</li>
+        <li><code>.txt</code>, <code>.md</code> — direct</li>
+        <li><code>.png</code>, <code>.jpg</code>, <code>.tiff</code> — OCR Tesseract (RO + EN)</li>
+        <li><code>.rtf</code>, <code>.odt</code> — convertite cu Pandoc embedded</li>
+      </ul>
+
+      <h3 id="indexare">Indexare automată + rezumare</h3>
+      <p>Fiecare fișier indexat primește un rezumat scurt generat de Claude Haiku (5-8 propoziții). Rezumatele sunt vizibile în panoul Fișiere și sunt folosite pentru retrieval rapid când agentul caută documente.</p>
+
+      <h3 id="atasare-doc">Atașare document la conversație</h3>
+      <p>În chat → pictograma <code>📎</code> → selectează fișier(e). Agentul primește textul integral al documentului ca context. Pentru documente foarte lungi (>50 pagini), folosește în loc <code>@nume-document</code> care apelează retrieval pe paragrafe.</p>
+
+      <h3 id="generare-doc">Generarea documentelor</h3>
+      <p>Cere agentului <em>"Redactează o cerere/contract/notificare pentru [situație]"</em>. Răspunsul include un bloc structurat pe care aplicația îl detectează și îl salvează ca fișier.</p>
+
+      <div class="note-box">
+        <div class="nb-label">Format ieșire</div>
+        Implicit DOCX (cu stiluri ierarhice). Schimbi cu butonul de format din composer: DOCX / PDF / TXT. Câmpurile variabile (numele clientului, sume, date) sunt marcate cu <code>[PARANTEZE DREPTE MAJUSCULE]</code> pentru completare manuală.
+      </div>
+
+      <!-- Dosare -->
+      <h2 id="dosare" class="toc-anchor">Dosare</h2>
+
+      <h3 id="creare-dosar">Crearea unui dosar nou</h3>
+      <p>Tab <code>Dosare</code> → <code>+ Dosar nou</code>. Câmpuri:</p>
+      <ul>
+        <li><strong>Titlu</strong> — denumirea dosarului (ex. "Popescu vs. Parchet ICCJ")</li>
+        <li><strong>Număr dosar</strong> — format standard (ex. <code>4521/2025</code>)</li>
+        <li><strong>Instanță</strong> — Tribunal, Curte de Apel, ICCJ, Judecătorie</li>
+        <li><strong>Client</strong> — nume + contact (email, telefon, adresă)</li>
+        <li><strong>Stadiu</strong> — fond / apel / recurs / executare</li>
+        <li><strong>Note interne</strong> — text liber, vizibil agentului</li>
+      </ul>
+
+      <h3 id="legare-docs">Legarea documentelor la dosar</h3>
+      <p>În detalii dosar → <code>Documente</code> → <code>+ Adaugă din fișiere</code> sau drag-and-drop direct. Documentele rămân stocate în locația originală (nu se copiază) — se păstrează doar o referință.</p>
+
+      <h3 id="conversatii-dosar">Conversații în context dosar</h3>
+      <p>Când deschizi o conversație din ecranul unui dosar, agentul primește automat:</p>
+      <ul>
+        <li>Datele dosarului (titlu, număr, instanță, client, stadiu)</li>
+        <li>Documentele atașate (rezumate scurte + acces la text complet la cerere)</li>
+        <li>Termenele și sarcinile dosarului</li>
+        <li>Conversațiile anterioare pe același dosar (memorie continuă)</li>
+      </ul>
+
+      <!-- Agenda -->
+      <h2 id="agenda" class="toc-anchor">Agenda — Termene și sarcini</h2>
+
+      <h3 id="detectie-auto">Detecție automată</h3>
+      <p>Agenții identifică automat termene din:</p>
+      <ul>
+        <li>Conversații ("termenul de recurs este 10 zile de la comunicare...")</li>
+        <li>Documente indexate (citații, încheieri de ședință)</li>
+        <li>Monitorul Oficial (modificări care creează termene de aplicare)</li>
+      </ul>
+      <p>Termenele detectate apar într-un panou de confirmare — accepți, modifici sau respingi înainte de a fi salvate.</p>
+
+      <h3 id="tipuri-termene">Tipuri</h3>
+      <ul>
+        <li><strong>Termen procesual</strong> — depunere act, comunicare, opțiune (galben)</li>
+        <li><strong>Scadență</strong> — plată, executare obligație (portocaliu)</li>
+        <li><strong>Depunere</strong> — act la grefă, ANAF, ONRC (galben)</li>
+        <li><strong>Prescripție</strong> — termen de prescripție extinctivă (roșu — critic)</li>
+        <li><strong>Manual</strong> — orice altceva pe care îl creezi tu</li>
+      </ul>
+
+      <h3 id="marcare-rezolvat">Marcarea ca rezolvat</h3>
+      <p>În agenda → click pe termen → <code>Marchează rezolvat</code>. Istoricul rămâne accesibil. Termenele rezolvate nu mai apar în notificările zilnice.</p>
+
+      <!-- Setări -->
+      <h2 id="setari" class="toc-anchor">Setări</h2>
+
+      <h3 id="setari-api">API Key Anthropic</h3>
+      <p>Vezi secțiunea Configurare inițială.</p>
+
+      <h3 id="tema">Tema</h3>
+      <p>Întunecat (implicit, recomandat pentru utilizare îndelungată) sau deschis. Schimbarea se aplică instant fără restart.</p>
+
+      <h3 id="backup">Backup automat</h3>
+      <p>Setări → <code>Backup</code> → configurează:</p>
+      <ul>
+        <li>Folder destinație (recomand un drive extern sau folder cloud sincronizat)</li>
+        <li>Frecvență: zilnic / săptămânal / la închidere</li>
+        <li>Ora exactă pentru zilnic</li>
+        <li>Număr de copii păstrate (rolling backup)</li>
+      </ul>
+      <p>Backup-ul include: SQLite database, configurări, dar <strong>NU</strong> cheia API (rămâne în keystore-ul sistemului).</p>
+
+      <h3 id="monitorul">Monitorul Oficial RSS</h3>
+      <p>Activează în Setări → <code>Monitorul Oficial</code>. Sistem polling la RSS-ul oficial, parsare și notificare când apare o lege în categoriile bifate (Penal, Civil, Fiscal, etc.). Notificările apar în panoul Notificări și pot declanșa o re-indexare automată dacă activezi opțiunea.</p>
+
+      <h3 id="utilizatori">Gestionare utilizatori</h3>
+      <p>Suport pentru avocat + asistenți, fiecare cu cont local. Permisiuni configurabile:</p>
+      <ul>
+        <li><strong>Avocat (admin)</strong> — toate operațiile</li>
+        <li><strong>Asistent</strong> — citire dosare, redactare cereri, fără ștergere</li>
+        <li><strong>Custom</strong> — bifare granulară per acțiune</li>
+      </ul>
+
+      <h3 id="import-export">Import / Export</h3>
+      <p>Export complet: ZIP cu toate dosarele, documentele linkate (referințe + opțional copie), conversațiile, configurările. Util pentru migrare între calculatoare sau backup manual.</p>
+
+      <!-- Confidențialitate -->
+      <h2 id="confidentialitate" class="toc-anchor">Confidențialitate și securitate</h2>
+      <p>LEX AI este construit cu principiul <em>privacy by default</em>. Următoarele garanții se aplică:</p>
+
+      <h3 id="local-only">Date locale</h3>
+      <ul>
+        <li>Niciun cont, niciun login pe servere LEX AI — nu există o platformă cloud</li>
+        <li>Baza de date SQLite locală: <code>C:\Users\[user]\AppData\Roaming\LexAI\lexai.db</code> (Windows) / <code>~/Library/Application Support/LexAI/lexai.db</code> (macOS)</li>
+        <li>Documentele indexate rămân în locațiile lor originale (referință, nu copie)</li>
+        <li>Backup-urile sunt scrise în folderul pe care îl alegi tu</li>
+      </ul>
+
+      <h3 id="criptare">Criptare</h3>
+      <ul>
+        <li>Cheia API Anthropic: criptată cu DPAPI (Windows) sau Keychain (macOS) — nu poate fi citită de alt utilizator pe același calculator</li>
+        <li>SQLite cu extensia SQLCipher (AES-256) — opțional, activabil în Setări</li>
+        <li>Comunicarea cu Anthropic: HTTPS / TLS 1.3</li>
+      </ul>
+
+      <h3 id="anthropic-policy">Datele trimise la Anthropic</h3>
+      <p>Când agentul răspunde, sunt trimise la API:</p>
+      <ul>
+        <li>Promptul agentului (configurabil)</li>
+        <li>Textul conversației curente</li>
+        <li>Articolele de context retrieved din corpus (text scurt)</li>
+        <li>Documentele atașate explicit la mesaj (text integral)</li>
+      </ul>
+      <p>NU sunt trimise: toate documentele indexate, dosarele neselectate, conversațiile cu alți agenți. Conform politicii Anthropic API (nu Claude.ai consumer), conversațiile <strong>nu sunt folosite pentru antrenament</strong>.</p>
+
+      <h3 id="recomandari">Recomandări</h3>
+      <ul>
+        <li>Activează SQLCipher pentru bază de date criptată</li>
+        <li>Configurează backup zilnic pe drive extern</li>
+        <li>Nu partaja calculatorul cu utilizatori care nu fac parte din cabinet</li>
+        <li>Pentru date super-sensibile (clienți VIP, dosare penale grave), folosește un agent cu acces restrictiv la foldere</li>
+      </ul>
+
+      <!-- FAQ -->
+      <h2 id="faq" class="toc-anchor">Întrebări frecvente</h2>
+      <div id="faq-list-root"></div>
+
+      <!-- Legi cover -->
+      <h2 id="legi" class="toc-anchor">Legile acoperite (sumar)</h2>
+      <p>Lista completă de legi indexate în corpusul juridic, cu numărul de articole:</p>
+      <div class="codes-grid" id="legi-grid"></div>
+      <p style="margin-top: 16px; font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">
+        Total: 5.247 articole în 24 acte normative · ultima sincronizare manifest: v1.0.3 / 12.05.2026
+      </p>
+    </main>
+  </div>
+
+  <div id="footer-root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+  <script type="text/babel" src="help-content.jsx"></script>
+</body>
+</html>

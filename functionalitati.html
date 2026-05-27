@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEX·AI — Funcționalități</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="demos.css" />
+  <style>
+    /* Tab showcase */
+    .tab-showcase { margin-top: 40px; }
+    .tab-tabs {
+      display: flex; gap: 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+      overflow-x: auto;
+    }
+    .tab-tab {
+      padding: 14px 22px;
+      background: transparent;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: -1px;
+      display: flex; align-items: center; gap: 8px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .tab-tab:hover { color: var(--text); }
+    .tab-tab.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+    .tab-content { min-height: 520px; }
+    .tab-content .tc-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 48px;
+      align-items: flex-start;
+    }
+    .tab-content .tc-text h3 { font-size: 1.5rem; margin-bottom: 12px; }
+    .tab-content .tc-text p { font-size: 1rem; }
+    .tab-content .tc-text ul {
+      list-style: none; padding: 0;
+      display: flex; flex-direction: column; gap: 8px;
+      margin: 20px 0 0;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .tab-content .tc-text ul li {
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .tab-content .tc-text ul li::before {
+      content: '▸';
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Feature grid */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 56px;
+    }
+    .feat-grid-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: flex; flex-direction: column;
+      gap: 14px;
+      min-height: 200px;
+    }
+    .feat-grid-card:hover {
+      border-color: rgba(220,180,60,0.35);
+      box-shadow: 0 0 0 1px rgba(220,180,60,0.25), 0 4px 12px rgba(0,0,0,0.2);
+      transform: translateY(-2px);
+    }
+    .feat-grid-card .fgc-icon {
+      width: 44px; height: 44px;
+      display: grid; place-items: center;
+      background: var(--gold-bg);
+      border: 1px solid rgba(220,180,60,0.25);
+      border-radius: 8px;
+      color: var(--gold);
+    }
+    .feat-grid-card .fgc-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .feat-grid-card .fgc-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .feat-grid-card .fgc-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+    .feat-grid-card .fgc-bottom .open-link { color: var(--gold); display: flex; align-items: center; gap: 4px; }
+
+    /* Expanded panel */
+    .feat-expanded {
+      grid-column: 1 / -1;
+      background: var(--bg-1);
+      border: 1px solid rgba(220,180,60,0.4);
+      border-radius: 10px;
+      padding: 32px;
+      margin-top: 4px;
+      animation: panel-in 0.3s ease;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 40px;
+      align-items: flex-start;
+    }
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .feat-expanded .fe-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: transparent;
+      border: 0;
+      color: var(--text-muted);
+      width: 28px; height: 28px;
+      border-radius: 4px;
+      display: grid; place-items: center;
+    }
+    .feat-expanded .fe-close:hover { color: var(--text); background: var(--bg-2); }
+    .feat-expanded h3 { margin-bottom: 12px; font-size: 1.4rem; }
+    .feat-expanded p { font-size: 1rem; color: var(--text-muted); line-height: 1.65; }
+    .feat-expanded ul {
+      list-style: none; padding: 0;
+      display: flex; flex-direction: column; gap: 8px;
+      margin: 16px 0;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .feat-expanded ul li { display: flex; gap: 8px; align-items: flex-start; }
+    .feat-expanded ul li::before { content: '▸'; color: var(--gold); flex-shrink: 0; }
+
+    .feat-mini-mock {
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .feat-mini-mock .mm-label {
+      font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    /* Agent type cards (sub-grid inside expanded feature) */
+    .agent-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .agent-mini-card {
+      padding: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .agent-mini-card .amc-name { font-weight: 600; color: var(--text); }
+    .agent-mini-card .amc-domain {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 900px) {
+      .feat-grid { grid-template-columns: 1fr; }
+      .feat-expanded { grid-template-columns: 1fr; }
+      .tab-content .tc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <!-- Page header -->
+  <section style="padding: 72px 0 32px; text-align: center;">
+    <div class="container-narrow">
+      <div class="kicker" style="justify-content: center; display: inline-flex;">Funcționalități · LEX AI v1.0</div>
+      <h1 style="margin-top: 16px;">Doisprezece module pentru cabinetul tău.</h1>
+      <p class="lead" style="max-width: 620px; margin: 16px auto 0;">
+        Chat multi-agent, corpus juridic offline, gestionare dosare, agendă, generare documente —
+        toate într-o singură aplicație desktop, fără cloud, fără sincronizare externă.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tabbed showcase -->
+  <section>
+    <div class="container">
+      <div id="tab-showcase-root" class="tab-showcase"></div>
+    </div>
+  </section>
+
+  <!-- Feature grid (12 features) -->
+  <section style="background: var(--bg-1); border-top: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-heading">
+        <div class="kicker">Funcționalități complete</div>
+        <h2>Doisprezece capabilități, în detaliu.</h2>
+        <p>Apasă pe un card pentru detalii. Fiecare funcționalitate include o demonstrație vizuală.</p>
+      </div>
+      <div id="feat-grid-root"></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container-narrow">
+      <h2>Vezi-le în acțiune.</h2>
+      <p>Descarcă trial-ul gratuit de 30 de zile și testează toate cele 12 funcționalități pe cazurile tale reale.</p>
+      <div class="hero-ctas">
+        <a href="/descarcare" class="btn btn-primary btn-lg">Descarcă pentru Windows</a>
+        <a href="/preturi" class="btn btn-ghost btn-lg">Vezi prețurile</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+  <script type="text/babel">
+    const { useState } = React;
+    const { Nav, Footer, MIcon } = window;
+
+    ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="functionalitati" />);
+    ReactDOM.createRoot(document.getElementById('footer-root')).render(<Footer />);
+
+    /* ============ Tabbed showcase ============ */
+    const TABS = [
+      {
+        id: 'chat', label: 'Chat', icon: 'chat',
+        title: 'Conversații specializate cu retrieval automat',
+        text: 'Fiecare conversație rulează prin pipeline-ul retrieval BM25 → injectare context → răspuns Claude. Agentul vede articolele de lege relevante înainte să formuleze.',
+        bullets: [
+          'Tab-uri pentru conversații paralele cu diferiți agenți',
+          '12 articole din corpus injectate automat per întrebare',
+          'Detectare automată termene și salvare în agendă',
+          'Mod ACTIV — agentul cere singur input de la alți agenți',
+        ],
+        mock: <ChatTabMock />,
+      },
+      {
+        id: 'docs', label: 'Documente', icon: 'file-doc',
+        title: 'Indexare automată + generare court-ready',
+        text: 'Adăugi foldere — aplicația indexează totul recursiv, OCR pe scanate, rezumat Haiku pe fiecare. Cere documente, primești DOCX/PDF cu structură corectă.',
+        bullets: [
+          'PDF / DOCX / TXT / MD / imagini (OCR Tesseract)',
+          'Rezumate automate cu Claude Haiku',
+          'Watcher pentru foldere — re-indexare la schimbare',
+          'Generare: DOCX / PDF / TXT cu câmpuri [VARIABILE]',
+        ],
+        mock: <DocsTabMock />,
+      },
+      {
+        id: 'dosare', label: 'Dosare', icon: 'briefcase',
+        title: 'Case file management complet',
+        text: 'Fiecare dosar are: client, număr, instanță, stadiu, documente legate, conversații, termene. Agentul vede totul când răspunde din contextul dosarului.',
+        bullets: [
+          'Câmpuri complete: client, contact, număr, stadiu',
+          'Documente legate prin referință (nu copie)',
+          'Conversații cu memorie continuă per dosar',
+          'Termene și sarcini per dosar',
+        ],
+        mock: <DosareTabMock />,
+      },
+      {
+        id: 'termene', label: 'Termene', icon: 'calendar',
+        title: 'Agenda care vede ce vede agentul',
+        text: 'Termenele apar automat din documente și conversații. Tipuri: procesual, scadență, depunere, prescripție. Notificări pe priorități.',
+        bullets: [
+          'Detectare automată din text — confirmi sau respingi',
+          'Tipuri colorate: galben, portocaliu, roșu',
+          'Vizibile pentru agent în contextul de răspuns',
+          'Notificări zilnice + alerte critice',
+        ],
+        mock: <TermeneTabMock />,
+      },
+      {
+        id: 'corpus', label: 'Corpus', icon: 'book',
+        title: 'SQLite FTS5, ranking BM25, 5.247 articole',
+        text: 'Cod Civil, Cod Penal, CPC, CPP, Cod Fiscal, Cod Administrativ, Cod Muncii și încă 17 legi conexe. Indexate local, căutare full-text, ranking de relevanță.',
+        bullets: [
+          'Indexare în prima rulare, ulterior offline',
+          'Top-K = 12 articole per query (configurabil 5-20)',
+          'Diacritice și stemming românesc',
+          'Adăugare manuală URL-uri sau fișiere de lege',
+        ],
+        mock: <CorpusTabMock />,
+      },
+    ];
+
+    function ChatTabMock() {
+      return (
+        <div className="mock">
+          <div className="mock-titlebar">
+            <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+            <span className="tb-title">Chat — Avocat Penal</span>
+          </div>
+          <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 10, background: 'var(--bg-1)' }}>
+            <div style={{ alignSelf: 'flex-end', padding: '8px 12px', background: 'rgba(220,180,60,0.1)', border: '1px solid rgba(220,180,60,0.22)', borderRadius: '8px 8px 2px 8px', fontSize: 12, color: '#f0e0b3', maxWidth: '80%' }}>
+              Există jurisprudență ICCJ pe interceptări fără mandat de judecător?
+            </div>
+            <div style={{ padding: '10px 12px', background: 'var(--bg-2)', border: '1px solid var(--border)', borderRadius: '8px 8px 8px 2px', fontSize: 12, lineHeight: 1.55 }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-dim)', marginBottom: 4 }}>12 ARTICOLE INJECTATE</div>
+              Da. <span className="cite-ref" style={{ fontSize: 10 }}>CCR 51/2016</span> + <span className="cite-ref" style={{ fontSize: 10 }}>ICCJ HP 47/2023</span> stabilesc nulitatea absolută. Probele derivate sunt afectate de teoria fructelor pomului otrăvit (art. 102 CPP).
+            </div>
+            <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-dim)', padding: '2px 6px', background: 'var(--bg-2)', borderRadius: 3 }}>⏱ 2.4s</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--green)', padding: '2px 6px', background: 'var(--bg-2)', borderRadius: 3 }}>● 487 tokens</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function DocsTabMock() {
+      return (
+        <div className="mock">
+          <div className="mock-titlebar">
+            <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+            <span className="tb-title">Fișiere indexate</span>
+          </div>
+          <div style={{ padding: 14, background: 'var(--bg-1)', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {[
+              { n: 'rechizitoriu-dosar-4521.pdf', m: 'PDF · 47 pagini · OCR aplicat', s: 'INDEXAT' },
+              { n: 'contract-cesiune-v2.docx', m: 'DOCX · 6 pagini · 2.184 cuvinte', s: 'INDEXAT' },
+              { n: 'CF-extras-imobiliar-bucuresti.pdf', m: 'PDF · 4 pagini · sarcini detectate', s: 'INDEXAT' },
+              { n: 'decizie-anaf-impunere.pdf', m: 'PDF · 12 pagini · sumă: 142.000 lei', s: 'INDEXAT' },
+              { n: 'cerere-recurs-v1.docx', m: 'În generare · pag. 5/8', s: 'GENEREZ', gen: true },
+            ].map((d, i) => (
+              <div key={i} className={`mock-doc-row ${d.gen ? 'generating' : ''}`} style={{ margin: 0 }}>
+                <div className={`mdi ${d.n.endsWith('.pdf') ? 'pdf' : ''}`}>
+                  {d.n.endsWith('.pdf') ? 'PDF' : 'DOCX'}
+                </div>
+                <div className="md-info">
+                  <div className="md-name" style={{ fontSize: 12 }}>{d.n}</div>
+                  <div className="md-meta">{d.m}</div>
+                </div>
+                <div className={`md-status ${d.gen ? 'gen' : 'done'}`} style={{ fontSize: 9 }}>{d.s}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function DosareTabMock() {
+      return (
+        <div className="mock">
+          <div className="mock-titlebar">
+            <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+            <span className="tb-title">Dosare active — 24</span>
+          </div>
+          <div style={{ padding: 14, background: 'var(--bg-1)' }}>
+            {[
+              { num: '4521/2025', t: 'Popescu vs. Parchet ICCJ', c: 'Popescu Andrei', dl: '1 zi rămasă', urgent: true },
+              { num: '1287/3/2025', t: 'Cesiune Aurora Trade SRL', c: 'Aurora Trade SRL', dl: 'AGA · 7 zile' },
+              { num: '2103/2/2025', t: 'Divorț Ionescu — custodie', c: 'Ionescu Maria', dl: 'Termen 18.06' },
+            ].map((d, i) => (
+              <div key={i} className="mock-dosar" style={{ marginBottom: 8 }}>
+                <div className="md-head">
+                  <span className="md-num">{d.num}</span>
+                  <span className={`md-status-pill ${d.urgent ? 'urgent' : 'activ'}`}>{d.urgent ? 'urgent' : 'în curs'}</span>
+                </div>
+                <div className="md-title" style={{ fontSize: 12.5 }}>{d.t}</div>
+                <div className="md-client" style={{ fontSize: 11 }}>{d.c}</div>
+                <div className="md-deadlines">
+                  <span className={`dl ${d.urgent ? 'danger' : 'warn'}`}>⏱ {d.dl}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function TermeneTabMock() {
+      return (
+        <div className="mock">
+          <div className="mock-titlebar">
+            <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+            <span className="tb-title">Agenda — săptămâna curentă</span>
+          </div>
+          <div style={{ padding: 14, background: 'var(--bg-1)', display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {[
+              { d: 'Mâine', t: 'Cerere recurs · Popescu vs. Parchet', tp: 'PROCESUAL', col: 'red' },
+              { d: 'Joi 7 mai', t: 'Audiere · 1287/3/2025 · Trib. Buc.', tp: 'AUDIERE', col: 'gold' },
+              { d: 'Vineri 8 mai', t: 'Contestație ANAF · termen depunere', tp: 'DEPUNERE', col: 'gold' },
+              { d: 'Luni 12 mai', t: 'AGA cesiune Aurora Trade', tp: 'SARCINĂ', col: 'blue' },
+              { d: '20 iunie', t: 'Prescripție răspundere delictuală', tp: 'PRESCRIPȚIE', col: 'red' },
+            ].map((t, i) => (
+              <div key={i} style={{
+                display: 'flex', gap: 12, alignItems: 'center',
+                padding: '10px 12px',
+                background: 'var(--bg-2)',
+                border: '1px solid var(--border)',
+                borderLeft: `2px solid ${t.col === 'red' ? '#e88a8a' : t.col === 'gold' ? 'var(--gold)' : 'var(--blue)'}`,
+                borderRadius: 5,
+                fontSize: 12,
+              }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-dim)', minWidth: 80, letterSpacing: '0.04em' }}>{t.d}</div>
+                <div style={{ flex: 1, color: 'var(--text)' }}>{t.t}</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: t.col === 'red' ? '#e88a8a' : t.col === 'gold' ? 'var(--gold)' : 'var(--blue)', letterSpacing: '0.08em' }}>{t.tp}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function CorpusTabMock() {
+      return (
+        <div className="mock">
+          <div className="mock-titlebar">
+            <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+            <span className="tb-title">Corpus juridic · SQLite FTS5</span>
+          </div>
+          <div className="mock-corpus" style={{ background: 'var(--bg-1)' }}>
+            <div className="mc-bar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/></svg>
+              <div className="mc-bar-input">prescripție răspundere delictuală</div>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--green)' }}>12ms</span>
+            </div>
+            <div className="mock-corpus-grid">
+              <div className="corpus-tile"><div className="ct-num">2.412</div><div className="ct-label">Cod Civil</div></div>
+              <div className="corpus-tile"><div className="ct-num">446</div><div className="ct-label">Cod Penal</div></div>
+              <div className="corpus-tile"><div className="ct-num">1.116</div><div className="ct-label">CPC</div></div>
+              <div className="corpus-tile"><div className="ct-num">605</div><div className="ct-label">CPP</div></div>
+              <div className="corpus-tile"><div className="ct-num">498</div><div className="ct-label">Fiscal</div></div>
+              <div className="corpus-tile"><div className="ct-num">170</div><div className="ct-label">Admin.</div></div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const TabShowcase = () => {
+      const [active, setActive] = useState(0);
+      const t = TABS[active];
+      return (
+        <>
+          <div className="tab-tabs">
+            {TABS.map((tt, i) => (
+              <button key={tt.id} className={`tab-tab ${active === i ? 'active' : ''}`} onClick={() => setActive(i)}>
+                <MIcon name={tt.icon} size={15} />
+                {tt.label}
+              </button>
+            ))}
+          </div>
+          <div className="tab-content" key={t.id}>
+            <div className="tc-grid">
+              <div className="tc-text">
+                <div className="kicker">{t.label}</div>
+                <h3 style={{ marginTop: 12 }}>{t.title}</h3>
+                <p>{t.text}</p>
+                <ul>{t.bullets.map((b, i) => <li key={i}>{b}</li>)}</ul>
+              </div>
+              <div>{t.mock}</div>
+            </div>
+          </div>
+        </>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('tab-showcase-root')).render(<TabShowcase />);
+
+    /* ============ Feature grid ============ */
+    const FEATURES = [
+      {
+        id: 'multi-agent',
+        icon: 'users',
+        title: 'Chat multi-agent cu corpus juridic intern',
+        desc: 'Conversații paralele cu agenți specializați; fiecare răspuns include articole reale din corpus injectate ca context verificat.',
+        details: 'Pipeline-ul: tokenizare query → căutare BM25 în SQLite FTS5 → top 12 articole → injectare ca CONTEXT VERIFICAT în prompt → răspuns Claude → parsare răspuns pentru documente/termene/comenzi laterale. Agenții sunt instruiți explicit să nu citeze articole care nu apar în context.',
+        bullets: ['Tab-uri paralele cu agenți diferiți', 'Memorie continuă per dosar', 'Citările sunt verificabile în corpus', 'Comutare model în zbor (Haiku/Sonnet/Opus)'],
+        mock: 'PROMPT TEMPLATE\n────────────────\n{system_prompt_agent}\n\n## CONTEXT VERIFICAT\n[12 articole din corpus]\n\n## DOSAR ACTIV\n{dosar.json}\n\n## AGENDA 30 zile\n[5 termene apropiate]\n\n## ÎNTREBARE\n{user_message}',
+      },
+      {
+        id: 'agent-types',
+        icon: 'briefcase',
+        title: '9 tipuri de agenți specializați',
+        desc: 'Penal, Civil, Imobiliar, Comercial, Familie, Fiscal, Administrativ, Redactor Documente, Cercetare Juridică. Plus până la 15 agenți custom per instalare.',
+        details: 'Fiecare agent are: system prompt construit pentru ramura sa, lista de legi cunoscute (priorizate în retrieval), exemple de utilizare în prompt (few-shot), conduită specifică (ex. Redactor folosește terminologie strictă; Cercetare e mai detailed). Agenții custom pot moșteni un template sau pleca de la zero.',
+        bullets: ['9 template-uri built-in', 'Maxim 15 agenți custom adăugați', 'Configurare model per agent (H/S/O)', 'Acces foldere și web configurabile per agent'],
+        agents: true,
+      },
+      {
+        id: 'mod-activ',
+        icon: 'sparkles',
+        title: 'Mod ACTIV — colaborare între agenți',
+        desc: 'Agentul primar trimite întrebări laterale către alți agenți când o speță are componente multidisciplinare. Sinteza apare ca un singur răspuns coordonat.',
+        details: 'În spatele scenei: agentul primar identifică componentele specializate, formulează sub-întrebări, apelează API pentru fiecare agent secundar, primește răspunsurile și le integrează. În UI vezi panoul ACTIV care arată ce agenți au contribuit și la ce secțiune.',
+        bullets: ['Orchestrare automată — fără intervenție manuală', 'Transparent în UI — vezi cine face ce', 'Cost de tokeni multiplicat — folosește când e nevoie', 'Mod ORCHESTRAT disponibil pentru cazuri complexe'],
+        mock: '┌─ COORDONATOR ─ Av. Penal ─────────────┐\n│ Analizez cererea de recurs               │\n├──────────────────────────────────────────┤\n│ ↳ Av. Civil    · capăt civil       ✓ 8s │\n│ ↳ Drept Fiscal · prejudiciu        ⟳ 4s │\n│ ↳ Cercetare    · jurisprudență     ✓ 12s│\n└──────────────────────────────────────────┘',
+      },
+      {
+        id: 'gen-docs',
+        icon: 'file-doc',
+        title: 'Generare documente juridice',
+        desc: 'Cereri, întâmpinări, contracte, notificări, contestații, acte constitutive, hotărâri AGA. Format DOCX (cu stiluri), PDF sau TXT.',
+        details: 'Agentul produce un bloc structurat în răspuns. Aplicația parsează blocul (markdown sau XML) și îl scrie ca fișier folosind docx.js (pentru .docx cu stiluri) sau pdfkit (pentru .pdf). Câmpurile variabile sunt marcate cu [PARANTEZE DREPTE MAJUSCULE] pentru completare. Versionare automată — fiecare revizie e v1, v2, v3 în același folder.',
+        bullets: ['DOCX cu stiluri ierarhice (Heading 1-3, listă numerotată)', 'PDF cu antet și subsol', 'Versionare automată v1/v2/v3', 'Câmpuri [VARIABILE] vizibile la editare'],
+        mock: '<bloc-document tip="cerere-chemare-judecata">\n  <antet>{firma}</antet>\n  <instanta>[INSTANȚA]</instanta>\n  <reclamant>[NUME]</reclamant>\n  <parat>[NUME PARAT]</parat>\n  <obiect>recuperare creanță 47.500 lei</obiect>\n  <temei>art. 1.523 CC + art. 194 CPC</temei>\n  ...\n</bloc-document>',
+      },
+      {
+        id: 'dosare',
+        icon: 'briefcase',
+        title: 'Gestionare dosare',
+        desc: 'Sistem complet de case file management: client, contact, număr dosar, instanță, stadiu, documente legate, conversații, termene per dosar.',
+        details: 'Dosarele sunt entități SQLite cu relații one-to-many către documente (referință, nu copie), conversații (memorie continuă), termene și sarcini. Orice conversație nouă din contextul unui dosar primește automat toate datele dosarului ca context.',
+        bullets: ['Câmpuri: titlu, număr, instanță, stadiu, client, note', 'Filtre: după stadiu, client, ultimă activitate', 'Export per dosar — ZIP cu tot conținutul', 'Timeline activitate per dosar'],
+      },
+      {
+        id: 'termene',
+        icon: 'calendar',
+        title: 'Urmărire termene și sarcini',
+        desc: 'Agenții detectează automat termenele din documente și conversații. Tipuri colorate, notificări, agendă vizibilă pentru agent în răspunsuri viitoare.',
+        details: 'Detectare bazată pe pattern matching ("termen de X zile", "scadent la DATA", "prescripție de X ani de la Y") + analiză semantică Claude. Toate detectiile apar ca propuneri — confirmi, modifici sau respingi înainte de salvare. Agenda activă (termene în 30 zile) e injectată în contextul conversațiilor.',
+        bullets: ['Detectare automată din text', 'Tipuri: procesual, scadență, depunere, prescripție', 'Notificări zilnice + alerte critice', 'Agendă vizibilă agentului în context'],
+      },
+      {
+        id: 'index-docs',
+        icon: 'folder',
+        title: 'Indexare documente — foldere + fișiere',
+        desc: 'Adaugi foldere supravegheate sau fișiere individuale. Aplicația indexează recursiv, OCR pe scanate, rezumat automat cu Claude Haiku.',
+        details: 'Watcher chokidar pentru schimbări în foldere (add, modify, delete). Extragere text: pdf-parse pentru PDF, mammoth pentru DOCX, tesseract.js pentru OCR (română + engleză). Rezumat Haiku pe fiecare fișier — 5-8 propoziții, vizibile în panoul Fișiere. Indexul ajunge în SQLite FTS5 pentru search rapid.',
+        bullets: ['Formate: PDF, DOCX, TXT, MD, PNG, JPG, TIFF', 'OCR Tesseract — română + engleză', 'Rezumate Claude Haiku pe fiecare fișier', 'File watcher — re-indexare automată'],
+      },
+      {
+        id: 'monitor',
+        icon: 'rss',
+        title: 'Monitorul Oficial RSS',
+        desc: 'Polling pe RSS-ul Monitorului Oficial. Notificare când apare o lege din categoriile bifate. Opțional re-indexare automată în corpus.',
+        details: 'Polling configurabil (15min - 24h). Parsare RSS, filtrare după categorii (Penal, Civil, Fiscal etc.), notificare cu link la text complet. Dacă activezi opțiunea, aplicația descarcă textul, parsează articolele și le adaugă în corpus marcându-le ca "nou".',
+        bullets: ['Polling 15min - 24h', 'Filtru pe categorii de drept', 'Re-indexare automată în corpus (opțional)', 'Notificări push în aplicație'],
+      },
+      {
+        id: 'web-access',
+        icon: 'globe',
+        title: 'Acces web controlat per agent',
+        desc: 'Activezi/dezactivezi accesul la web per agent. Util pentru fetch URL-uri (decizii ICCJ, ANAF, legislatie.just.ro) direct în conversație.',
+        details: 'Când agentul cere o pagină web, aplicația face fetch HTTP, extrage textul lizibil (cheerio + readability), îl trimite ca context adițional. Domenii whitelist configurabile pentru securitate (default: legislatie.just.ro, scj.ro, anaf.ro, ccr.ro, juridice.ro). Acces complet doar pentru utilizatorii cu rol admin.',
+        bullets: ['Fetch URL la cererea agentului', 'Whitelist domenii configurabilă', 'Extract text curat (fără reclame, navigație)', 'Acces per agent — activezi pentru Cercetare, oprești pentru Redactor'],
+      },
+      {
+        id: 'memory',
+        icon: 'sparkles',
+        title: 'Memorie persistentă per agent',
+        desc: 'Note de tip "preferințe client", "stil cabinet", "convenții uzuale" — text liber injectat la fiecare conversație cu acel agent.',
+        details: 'Diferit de memoria conversațiilor (care e per-dosar). Notele agentului sunt globale: "Clientul [X] preferă comunicare formală", "Cabinetul nostru folosește formula introductivă Y", "Atenție la convenția cu instanța Z". Limita: 4.000 tokeni per notă, 5 note per agent.',
+        bullets: ['Note text liber injectate la fiecare conversație', '5 note per agent, max 4.000 tokeni fiecare', 'Editare directă, fără restart', 'Vizibile la utilizatorul agentului'],
+      },
+      {
+        id: 'corpus-full',
+        icon: 'book',
+        title: 'Corpus legislativ offline (5.247 articole)',
+        desc: 'SQLite FTS5 cu BM25 ranking. 24 acte normative principale. Funcționează offline după instalare. Adăugare manuală URL sau fișier.',
+        details: 'Indexarea inițială rulează în prima pornire (~5 minute). Tabel principal: corpus_articles (id, code_id, article_no, text, normalized_text). Tabel virtual FTS5: corpus_fts. Query-urile rulează direct în SQLite — ms-time. Diacriticile sunt normalizate la index, iar query-ul utilizatorului e expandat cu/fără diacritice.',
+        bullets: ['24 legi indexate, 5.247 articole', 'Query în <20ms (SQLite local)', 'BM25 cu parametri tunați pentru text juridic românesc', 'Update manual sau prin Monitor RSS'],
+      },
+      {
+        id: 'multi-user',
+        icon: 'users',
+        title: 'Multi-utilizator (avocat + asistent)',
+        desc: 'Conturi locale cu permisiuni diferite. Avocat = admin (toate operațiile). Asistent = citire + redactare cereri. Custom = bifare granulară.',
+        details: 'Autentificare locală (parolă bcrypt) la pornirea aplicației. Sesiunea ține până la închidere sau timeout configurabil. Toate operațiile sunt logate cu user_id pentru audit. Permisiunile pot fi configurate la nivel de acțiune (citește dosar, șterge dosar, generează document, trimite la API, schimbă setări, etc.).',
+        bullets: ['Conturi locale cu parolă criptată', 'Roluri preset: admin / asistent / read-only', 'Permisiuni custom — bifare granulară', 'Audit log per acțiune'],
+      },
+    ];
+
+    const AGENT_MINI = [
+      { name: 'Penal', d: 'L.286/2009' },
+      { name: 'Civil', d: 'L.287/2009' },
+      { name: 'Imobiliar', d: 'L.7/1996' },
+      { name: 'Comercial', d: 'L.31/1990' },
+      { name: 'Familie', d: 'CC II' },
+      { name: 'Fiscal', d: 'L.227/2015' },
+      { name: 'Administrativ', d: 'L.554/2004' },
+      { name: 'Redactor', d: 'Universal' },
+      { name: 'Cercetare', d: 'Opus 4.7' },
+    ];
+
+    const FeatGrid = () => {
+      const [open, setOpen] = useState(null);
+
+      return (
+        <div className="feat-grid">
+          {FEATURES.map((f, i) => (
+            <React.Fragment key={f.id}>
+              <div className="feat-grid-card" onClick={() => setOpen(open === i ? null : i)}>
+                <div className="fgc-icon"><MIcon name={f.icon} size={20} /></div>
+                <div className="fgc-title">{f.title}</div>
+                <div className="fgc-desc">{f.desc}</div>
+                <div className="fgc-bottom">
+                  <span>{(i+1).toString().padStart(2, '0')} · {f.id}</span>
+                  <span className="open-link">{open === i ? 'Închide' : 'Detalii'} <MIcon name="arrow-right" size={11} /></span>
+                </div>
+              </div>
+              {open === i && (
+                <div className="feat-expanded" style={{ gridColumn: '1 / -1', position: 'relative' }}>
+                  <button className="fe-close" onClick={() => setOpen(null)}><MIcon name="x" size={14} /></button>
+                  <div>
+                    <div className="kicker">Funcționalitatea {(i+1).toString().padStart(2, '0')}</div>
+                    <h3 style={{ marginTop: 12 }}>{f.title}</h3>
+                    <p>{f.details}</p>
+                    <ul>{f.bullets.map((b, j) => <li key={j}>{b}</li>)}</ul>
+                    {f.agents && (
+                      <div className="agent-mini-grid">
+                        {AGENT_MINI.map(a => (
+                          <div key={a.name} className="agent-mini-card">
+                            <div className="amc-name">{a.name}</div>
+                            <div className="amc-domain">{a.d}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    {f.mock && (
+                      <div className="feat-mini-mock">
+                        <div className="mm-label">Sub capotă</div>
+                        <pre style={{ margin: 0, fontFamily: 'inherit', whiteSpace: 'pre-wrap' }}>{f.mock}</pre>
+                      </div>
+                    )}
+                    {!f.mock && (
+                      <div className="feat-mini-mock">
+                        <div className="mm-label">Detalii tehnice</div>
+                        <div style={{ fontSize: 12, lineHeight: 1.7, fontFamily: 'var(--font-ui)' }}>
+                          Această funcționalitate este complet locală. Datele sunt stocate în SQLite și nu sunt sincronizate în afara cabinetului. Vezi <a href="/ajutor" style={{ color: 'var(--gold)' }}>documentația</a> pentru detalii.
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('feat-grid-root')).render(<FeatGrid />);
+  </script>
+</body>
+</html>

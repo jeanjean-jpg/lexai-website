@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEX·AI — Asistentul juridic AI pentru cabinetul tău</title>
+  <meta name="description" content="LEX AI — Asistent juridic AI pentru cabinete de avocatură. 9 agenți specializați în legislația română. 100% local. Corpus juridic cu peste 5.000 articole." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="demos.css" />
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <!-- ====================================================================
+       HERO
+       ==================================================================== -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="container hero-inner">
+      <div id="hero-logo"></div>
+      <div id="hero-wordmark"></div>
+      <p class="tagline">Asistentul juridic AI pentru cabinetul tău de avocatură.</p>
+      <p class="sub-tagline">Corpus legislativ complet · 9 agenți specializați · Date confidențiale pe calculatorul tău</p>
+      <div class="hero-ctas">
+        <a href="/descarcare" class="btn btn-primary btn-lg">
+          <span>Descarcă gratuit · 30 zile</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="/preturi" class="btn btn-secondary btn-lg">Vezi prețuri</a>
+      </div>
+
+      <!-- App preview teaser -->
+      <div id="hero-preview" style="margin-top: 80px; max-width: 980px; margin-left: auto; margin-right: auto;"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       FEATURE STRIP
+       ==================================================================== -->
+  <div class="feature-strip">
+    <div class="feature-strip-item">
+      <div class="si-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      </div>
+      <div>
+        <div class="si-title">100% local</div>
+        <div class="si-desc">Datele nu părăsesc cabinetul tău. Aplicație Electron desktop.</div>
+      </div>
+    </div>
+    <div class="feature-strip-item">
+      <div class="si-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg>
+      </div>
+      <div>
+        <div class="si-title">5.000+ articole</div>
+        <div class="si-desc">Coduri românești indexate cu căutare full-text BM25.</div>
+      </div>
+    </div>
+    <div class="feature-strip-item">
+      <div class="si-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <div class="si-title">9 agenți specializați</div>
+        <div class="si-desc">Penal, civil, imobiliar, comercial, familie, fiscal, administrativ, redactor, cercetare.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       AGENT DEMO
+       ==================================================================== -->
+  <section>
+    <div class="container">
+      <div class="section-heading">
+        <div class="kicker">Demonstrație interactivă · agenți</div>
+        <h2>Nouă agenți. Fiecare specializat pe o ramură de drept.</h2>
+        <p>Selectează un agent și vezi un răspuns simulat. Fiecare răspuns citează articole reale din corpusul juridic intern.</p>
+      </div>
+      <div id="agent-demo-root"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       CORPUS DEMO
+       ==================================================================== -->
+  <section style="background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="section-heading">
+        <div class="kicker">Demonstrație interactivă · corpus</div>
+        <h2>Corpus juridic intern, căutare cu BM25.</h2>
+        <p>Sistemul preia automat cele mai relevante 12 articole din coduri și le injectează ca context verificat pentru fiecare întrebare. Fără halucinații, fără invenții de articole.</p>
+      </div>
+      <div id="corpus-demo-root"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       FEATURE BLOCKS
+       ==================================================================== -->
+
+  <!-- Block 1: Chat multi-agent -->
+  <section>
+    <div class="container">
+      <div class="feat-block" id="b1"></div>
+    </div>
+  </section>
+
+  <!-- Block 2: Corpus -->
+  <section style="background: var(--bg-1);">
+    <div class="container">
+      <div class="feat-block flip" id="b2"></div>
+    </div>
+  </section>
+
+  <!-- Block 3: Documents -->
+  <section>
+    <div class="container">
+      <div class="feat-block" id="b3"></div>
+    </div>
+  </section>
+
+  <!-- Block 4: Dosare -->
+  <section style="background: var(--bg-1);">
+    <div class="container">
+      <div class="feat-block flip" id="b4"></div>
+    </div>
+  </section>
+
+  <!-- Block 5: Privacy -->
+  <section>
+    <div class="container">
+      <div class="feat-block" id="b5"></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================
+       TRUST STRIP
+       ==================================================================== -->
+  <div class="trust-strip" style="border-top: 1px solid var(--border); background: var(--bg-1);">
+    <div class="container">
+      <div class="label">Construit pentru jurisprudența română</div>
+      <div class="trust-chips" id="trust-chips"></div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       CTA
+       ==================================================================== -->
+  <section class="cta-section">
+    <div class="container-narrow">
+      <div class="kicker" style="justify-content: center; display: flex;">Pregătit să încerci?</div>
+      <h2 style="margin-top: 16px;">Instalează LEX AI în 5 minute.</h2>
+      <p>30 de zile gratuit, toate funcționalitățile, fără card. Aduci propria cheie API Anthropic — datele rămân pe calculatorul tău.</p>
+      <div class="hero-ctas">
+        <a href="/descarcare" class="btn btn-primary btn-lg">Descarcă pentru Windows</a>
+        <a href="/ajutor" class="btn btn-ghost btn-lg">Ghid de instalare</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+  <script type="text/babel" src="demos.jsx"></script>
+
+  <script type="text/babel">
+    const { Nav, Footer, Logo, Wordmark, Reveal, MIcon } = window;
+    const { AgentDemo, CorpusDemo } = window;
+
+    /* Nav + Footer */
+    ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="" />);
+    ReactDOM.createRoot(document.getElementById('footer-root')).render(<Footer />);
+
+    /* Hero pieces */
+    ReactDOM.createRoot(document.getElementById('hero-logo')).render(
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Logo size="xl" pulse />
+      </div>
+    );
+    ReactDOM.createRoot(document.getElementById('hero-wordmark')).render(<Wordmark />);
+
+    /* Hero preview — tiny app teaser */
+    const HeroPreview = () => (
+      <div className="mock reveal in" style={{ marginTop: 0 }}>
+        <div className="mock-titlebar">
+          <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+          <span className="tb-title">LEX·AI — Asistent Juridic</span>
+          <span style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)' }}>
+            ACTIV · Av. Civil · claude-sonnet-4-5
+          </span>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', minHeight: 360 }}>
+          <div style={{ background: 'var(--bg-2)', borderRight: '1px solid var(--border)', padding: '14px 10px' }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em', color: 'var(--text-dim)', textTransform: 'uppercase', padding: '0 4px 10px' }}>
+              Agenți
+            </div>
+            {[
+              {n:'Penal', c:'#dcb43c', active: false},
+              {n:'Civil', c:'#dcb43c', active: true},
+              {n:'Imobiliar', c:'#6e6e7a', active: false},
+              {n:'Comercial', c:'#6e6e7a', active: false},
+              {n:'Familie', c:'#6e6e7a', active: false},
+              {n:'Fiscal', c:'#6e6e7a', active: false},
+              {n:'Administrativ', c:'#6e6e7a', active: false},
+              {n:'Redactor', c:'#6e6e7a', active: false},
+              {n:'Cercetare', c:'#c8a8e0', active: false},
+            ].map((a, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '6px 8px',
+                borderRadius: 4,
+                background: a.active ? 'var(--gold-bg)' : 'transparent',
+                fontSize: 12, color: a.active ? 'var(--gold)' : 'var(--text-muted)',
+                marginBottom: 2,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: a.c }}></span>
+                {a.n}
+              </div>
+            ))}
+          </div>
+          <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{
+              alignSelf: 'flex-end',
+              padding: '8px 14px',
+              background: 'rgba(220,180,60,0.10)',
+              border: '1px solid rgba(220,180,60,0.22)',
+              borderRadius: '8px 8px 2px 8px',
+              fontSize: 13, color: '#f0e0b3', maxWidth: '75%',
+            }}>
+              Pregătește o cerere de chemare în judecată pentru recuperarea creanței de 47.500 lei (factură neachitată din mai 2025).
+            </div>
+            <div style={{
+              padding: '12px 14px',
+              background: 'var(--bg-2)',
+              border: '1px solid var(--border)',
+              borderRadius: '8px 8px 8px 2px',
+              fontSize: 13, color: 'var(--text)', maxWidth: '85%',
+              lineHeight: 1.55,
+            }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', marginBottom: 6, letterSpacing: '0.04em' }}>
+                AV. CIVIL · 12 ARTICOLE INJECTATE
+              </div>
+              Cererea poate fi întemeiată pe <span className="cite-ref">art. 1.523 Cod Civil</span> (răspundere contractuală) și <span className="cite-ref">art. 194 CPC</span>. Termenul de prescripție este de <em style={{color:'var(--gold)', fontStyle:'normal'}}>3 ani</em> de la scadență — încadrare confortabilă. Redactez documentul complet?
+            </div>
+            <div style={{
+              display: 'inline-flex', alignSelf: 'flex-start',
+              gap: 10, padding: '10px 14px',
+              background: 'var(--bg-3)',
+              border: '1px solid var(--border)',
+              borderLeft: '3px solid var(--green)',
+              borderRadius: 6,
+              fontSize: 12,
+            }}>
+              <span style={{ width: 24, height: 30, background: 'linear-gradient(180deg, #2a4068, #1e304e)', borderRadius: 2, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-mono)', fontSize: 8, color: '#9ab8dd', fontWeight: 600 }}>DOCX</span>
+              <div>
+                <div style={{ fontWeight: 600, color: 'var(--text)' }}>cerere-chemare-in-judecata-v1.docx</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)' }}>8 pagini · 2.184 cuvinte · gata de descărcat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+    ReactDOM.createRoot(document.getElementById('hero-preview')).render(<HeroPreview />);
+
+    /* Interactive demos */
+    ReactDOM.createRoot(document.getElementById('agent-demo-root')).render(<AgentDemo />);
+    ReactDOM.createRoot(document.getElementById('corpus-demo-root')).render(<CorpusDemo />);
+
+    /* ============== Feature blocks ============== */
+
+    const FeatBlock = ({ kicker, title, text, bullets, mock, mockTitle }) => (
+      <>
+        <Reveal className="feat-text">
+          <div className="kicker">{kicker}</div>
+          <h2>{title}</h2>
+          <p>{text}</p>
+          {bullets && (
+            <ul className="bullet-list">
+              {bullets.map((b, i) => (
+                <li key={i}><span className="b-dot">▸</span><span>{b}</span></li>
+              ))}
+            </ul>
+          )}
+        </Reveal>
+        <Reveal delay={120}>
+          <div className="mock">
+            <div className="mock-titlebar">
+              <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+              <span className="tb-title">{mockTitle}</span>
+            </div>
+            {mock}
+          </div>
+        </Reveal>
+      </>
+    );
+
+    /* Block 1: Chat multi-agent */
+    const Mock1 = () => (
+      <div className="mock-chat">
+        <div className="mc-header">
+          <div className="mc-tabs">
+            <span className="mc-tab on">Av. Penal</span>
+            <span className="mc-tab">Av. Civil</span>
+            <span className="mc-tab">Fiscal</span>
+            <span className="mc-tab">+</span>
+          </div>
+          <div className="chip">ACTIV</div>
+        </div>
+        <div className="mc-msg user">Analizează rechizitoriul. Există vicii de procedură?</div>
+        <div className="mc-msg ai">
+          Am identificat <span className="mini-cite">art. 281 alin. (1) lit. b) CPP</span> — nulitate absolută pentru lipsa apărătorului în actele cu participare obligatorie. La filele 12-15, audierea din 14.03.2025 nu menționează prezența apărătorului.
+        </div>
+        <div className="mc-msg ai">
+          De asemenea, conform <span className="mini-cite">art. 102 alin. (2) CPP</span>, declarațiile derivate sunt afectate de nulitate absolută. Recomand cerere de excludere la primul termen.
+        </div>
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('b1')).render(
+      <FeatBlock
+        kicker="Conversații specializate"
+        title="Agenți care înțeleg dreptul român."
+        text="Fiecare agent are un prompt construit pentru ramura sa de drept — de la Cod Penal la contencios administrativ. Sistemul retreieve automat articolele relevante din corpus pentru fiecare întrebare. Fără halucinații, fără articole inventate."
+        bullets={[
+          'Promptul agentului include articolele relevante înainte de orice răspuns',
+          'Agenții sunt instruiți să nu citeze articole care nu apar în context',
+          'Comutare instantă între agenți în aceeași sesiune',
+        ]}
+        mockTitle="Chat — Av. Penal"
+        mock={<Mock1 />}
+      />
+    );
+
+    /* Block 2: Corpus */
+    const Mock2 = () => (
+      <div className="mock-corpus">
+        <div className="mc-bar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/></svg>
+          <div className="mc-bar-input">
+            răspundere civilă delictuală<span className="cursor">|</span>
+          </div>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)' }}>FTS5</span>
+        </div>
+        <div className="mock-corpus-grid">
+          <div className="corpus-tile"><div className="ct-num">2.412</div><div className="ct-label">Cod Civil</div></div>
+          <div className="corpus-tile"><div className="ct-num">446</div><div className="ct-label">Cod Penal</div></div>
+          <div className="corpus-tile"><div className="ct-num">1.116</div><div className="ct-label">CPC</div></div>
+          <div className="corpus-tile"><div className="ct-num">605</div><div className="ct-label">CPP</div></div>
+          <div className="corpus-tile"><div className="ct-num">498</div><div className="ct-label">Cod Fiscal</div></div>
+          <div className="corpus-tile"><div className="ct-num">170</div><div className="ct-label">Cod Administrativ</div></div>
+        </div>
+        <div style={{ marginTop: 14, padding: '10px 14px', background: 'var(--bg-2)', borderRadius: 6, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--green)', display: 'flex', justifyContent: 'space-between' }}>
+          <span>▸ 5.247 articole indexate · SQLite FTS5</span>
+          <span>BM25 · top-K = 12</span>
+        </div>
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('b2')).render(
+      <FeatBlock
+        kicker="Corpus juridic offline"
+        title="5.000+ articole din legislația română, mereu disponibile."
+        text="Cod Civil, Cod Penal, Cod Procedură Civilă, Cod Procedură Penală, Cod Fiscal, Cod Administrativ — indexate local cu SQLite FTS5 și căutare BM25. Fiecare întrebare primește automat cele mai relevante articole drept context."
+        bullets={[
+          'Indexare în prima rulare — funcționează offline',
+          'Articolele sunt textul exact, nu rezumate',
+          'Adăugare manuală a noilor texte de lege (URL sau fișier)',
+        ]}
+        mockTitle="Corpus — Setări → Cod"
+        mock={<Mock2 />}
+      />
+    );
+
+    /* Block 3: Documents */
+    const Mock3 = () => (
+      <div className="mock-docs">
+        <div className="mock-doc-row generating">
+          <div className="mdi">DOCX</div>
+          <div className="md-info">
+            <div className="md-name">cerere-chemare-in-judecata-v1.docx</div>
+            <div className="md-meta">Av. Civil · în redactare · pagina 5/8</div>
+          </div>
+          <div className="md-status gen">GENEREZ…</div>
+        </div>
+        <div className="mock-doc-row">
+          <div className="mdi pdf">PDF</div>
+          <div className="md-info">
+            <div className="md-name">contestatie-anaf-decizie-impunere.pdf</div>
+            <div className="md-meta">Drept Fiscal · 12 pagini · 4.2 KB</div>
+          </div>
+          <div className="md-status done">✓ SALVAT</div>
+        </div>
+        <div className="mock-doc-row">
+          <div className="mdi">DOCX</div>
+          <div className="md-info">
+            <div className="md-name">contract-cesiune-parti-sociale-v2.docx</div>
+            <div className="md-meta">Av. Comercial · 6 pagini · revizie 2</div>
+          </div>
+          <div className="md-status done">✓ SALVAT</div>
+        </div>
+        <div className="mock-doc-row">
+          <div className="mdi txt">TXT</div>
+          <div className="md-info">
+            <div className="md-name">notificare-punere-in-intarziere.txt</div>
+            <div className="md-meta">Redactor · 2 pagini · plain text</div>
+          </div>
+          <div className="md-status done">✓ SALVAT</div>
+        </div>
+        <div style={{ marginTop: 8, padding: '8px 12px', background: 'var(--bg-2)', borderRadius: 5, fontSize: 11, color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          Format ieșire: DOCX / PDF / TXT · câmpuri variabile marcate [PARANTEZE DREPTE]
+        </div>
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('b3')).render(
+      <FeatBlock
+        kicker="Generare documente"
+        title="Documente juridice gata de depus."
+        text="Cereri de chemare în judecată, întâmpinări, contracte, notificări, contestații. Generate de AI cu structură corectă, terminologie juridică precisă, diacritice și numerotare ierarhică."
+        bullets={[
+          'Ieșire DOCX / PDF / TXT',
+          'Câmpuri variabile marcate pentru completare manuală',
+          'Versionare automată — v1, v2, v3 la fiecare revizie',
+        ]}
+        mockTitle="Documente generate"
+        mock={<Mock3 />}
+      />
+    );
+
+    /* Block 4: Dosare */
+    const Mock4 = () => (
+      <div className="mock-dosare">
+        <div className="mock-dosar">
+          <div className="md-head">
+            <span className="md-num">4521/2025</span>
+            <span className="md-status-pill urgent">urgent</span>
+          </div>
+          <div className="md-title">Popescu vs. Parchet ICCJ</div>
+          <div className="md-client">Popescu Andrei · client@email.ro · 074x xxx xxx</div>
+          <div className="md-deadlines">
+            <span className="dl danger">⚠ Recurs · 1 zi rămasă</span>
+            <span className="dl">📄 14 documente · 2 conversații</span>
+          </div>
+        </div>
+        <div className="mock-dosar">
+          <div className="md-head">
+            <span className="md-num">1287/3/2025</span>
+            <span className="md-status-pill activ">în curs</span>
+          </div>
+          <div className="md-title">Cesiune SRL Aurora Trade</div>
+          <div className="md-client">Aurora Trade SRL · CUI 12345678</div>
+          <div className="md-deadlines">
+            <span className="dl warn">⏱ AGA convocator · 7 zile</span>
+            <span className="dl">📄 8 documente · 1 conversație</span>
+          </div>
+        </div>
+        <div className="mock-dosar" style={{ marginBottom: 0 }}>
+          <div className="md-head">
+            <span className="md-num">2103/2/2025</span>
+            <span className="md-status-pill activ">în curs</span>
+          </div>
+          <div className="md-title">Divorț Ionescu — custodie minor</div>
+          <div className="md-client">Ionescu Maria</div>
+          <div className="md-deadlines">
+            <span className="dl">📅 Termen · 18.06.2025</span>
+            <span className="dl">📄 22 documente · 5 conversații</span>
+          </div>
+        </div>
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('b4')).render(
+      <FeatBlock
+        kicker="Dosare & termene"
+        title="Agenda cabinetului, în context."
+        text="Agenții văd dosarele active, termenele și sarcinile atunci când răspund — fără să le repeți de fiecare dată. Termene legale detectate automat din documente și conversații."
+        bullets={[
+          'Câmpuri complete: client, contact, număr dosar, stadiu, note',
+          'Documente legate la dosar — vizibile pentru agent',
+          'Detecție automată termene: prescripție, depunere, procesuale',
+        ]}
+        mockTitle="Dosare active"
+        mock={<Mock4 />}
+      />
+    );
+
+    /* Block 5: Privacy */
+    const Mock5 = () => (
+      <div className="mock-privacy">
+        <div className="mock-privacy-row">
+          <MIcon name="check-circle" size={18} />
+          <div className="mpv-text">
+            <b>Documente clienți</b>
+            Indexate local. Citite și rezumate pe calculatorul tău.
+          </div>
+          <span className="mpv-flag">100% LOCAL</span>
+        </div>
+        <div className="mock-privacy-row">
+          <MIcon name="check-circle" size={18} />
+          <div className="mpv-text">
+            <b>Dosare & conversații</b>
+            SQLite criptat local. Backup automat în folderul configurat.
+          </div>
+          <span className="mpv-flag">100% LOCAL</span>
+        </div>
+        <div className="mock-privacy-row">
+          <MIcon name="check-circle" size={18} />
+          <div className="mpv-text">
+            <b>Cheia API Anthropic</b>
+            Stocată criptat (DPAPI Windows / Keychain macOS). Nu părăsește calculatorul.
+          </div>
+          <span className="mpv-flag">CRIPTAT</span>
+        </div>
+        <div className="mock-privacy-row">
+          <MIcon name="alert" size={18} />
+          <div className="mpv-text">
+            <b>Trimitere la Anthropic API</b>
+            Doar textul conversației + articolele de context. Documentele rămân local.
+          </div>
+          <span className="mpv-flag">CONTROLAT</span>
+        </div>
+        <div style={{ marginTop: 8, padding: '10px 14px', background: 'var(--bg-0)', borderRadius: 5, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-dim)', display: 'flex', justifyContent: 'space-between' }}>
+          <span>~/AppData/Roaming/LexAI/lexai.db</span>
+          <span style={{ color: 'var(--green)' }}>AES-256 · 142 MB</span>
+        </div>
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('b5')).render(
+      <FeatBlock
+        kicker="Confidențialitate"
+        title="Zero date în cloud."
+        text="Aplicația rulează complet local. Documentele, conversațiile și dosarele nu ajung niciodată pe servere externe. Cheia API Anthropic rămâne pe calculatorul tău, criptată. Conform politicii Anthropic API, conversațiile nu sunt folosite pentru antrenament."
+        bullets={[
+          'Bază de date SQLite locală, criptată',
+          'Documentele sunt procesate local — doar extrase relevante trimise ca context',
+          'Funcționează ca aplicație Electron desktop standalone',
+        ]}
+        mockTitle="Locația datelor"
+        mock={<Mock5 />}
+      />
+    );
+
+    /* Trust strip */
+    const trustChips = [
+      'Cod Civil', 'Cod Penal', 'Cod Procedură Civilă', 'Cod Procedură Penală',
+      'Cod Fiscal', 'Cod Administrativ', 'Legea 31/1990', 'Legea 85/2014',
+      'Legea 554/2004', 'Legea 7/1996', 'Legea 272/2004', 'Legea 217/2003',
+      'Legea 78/2000', 'Legea 98/2016', 'OG 13/2011', 'OUG 80/2013',
+    ];
+    ReactDOM.createRoot(document.getElementById('trust-chips')).render(
+      <>
+        {trustChips.map(c => <span key={c} className="chip chip-lg">{c}</span>)}
+      </>
+    );
+  </script>
+</body>
+</html>
