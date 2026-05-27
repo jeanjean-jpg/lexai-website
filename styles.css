@@ -36,6 +36,7 @@
 * { box-sizing: border-box; }
 html, body {
   margin: 0; padding: 0;
+  padding-top: var(--nav-h);
   background: var(--bg-0);
   color: var(--text);
   font-family: var(--font-ui);
@@ -113,7 +114,7 @@ section.deep { padding: 128px 0; }
    Navigation
    ========================================================================= */
 .nav {
-  position: sticky; top: 0; z-index: 100;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   height: var(--nav-h);
   display: flex; align-items: center;
   padding: 0 32px;
@@ -546,10 +547,6 @@ section.deep { padding: 128px 0; }
    Responsive
    ========================================================================= */
 @media (max-width: 900px) {
-  /* Fix nav to top of viewport on mobile — avoids sticky/scroll-container edge cases */
-  .nav { position: fixed; left: 0; right: 0; top: 0; }
-  body { padding-top: var(--nav-h); }
-
   .nav-links { display: none; }
   .nav-cta-desktop { display: none; }
   .nav-hamburger { display: flex; }
