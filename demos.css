@@ -770,7 +770,20 @@
   .agent-demo-grid { max-height: none; grid-template-columns: 1fr 1fr; }
   .pricing-grid { grid-template-columns: 1fr; }
   .calc-results { grid-template-columns: 1fr; }
+  /* Functionalitati tab grid */
+  .tc-grid { grid-template-columns: 1fr !important; }
+  /* Ajutor help layout */
+  .help-layout { grid-template-columns: 1fr !important; padding: 0 18px !important; }
+  .help-sidebar { display: none !important; }
 }
 @media (max-width: 600px) {
   .agent-demo-grid { grid-template-columns: 1fr; }
+  .price-card { padding: 24px 20px; }
+  .price-card .pc-amount { font-size: 44px; }
+  .calc { padding: 24px 18px; }
+  .corpus-demo { padding: 16px; }
+  .agent-chat { min-height: 420px; }
+  .bubble-user .b-content, .bubble-assistant .b-content { max-width: 100%; }
+  /* Privacy flags — truncate on mobile */
+  .mpv-flag { display: none; }
 }

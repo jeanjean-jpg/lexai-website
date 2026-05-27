@@ -200,6 +200,8 @@ const Wordmark = ({ className = '' }) => (
 /* ---------- Navigation ---------- */
 const Nav = ({ active }) => {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -207,32 +209,59 @@ const Nav = ({ active }) => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (menuOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   const links = [
-    { id: 'functionalitati', label: 'Funcționalități', href: 'functionalitati.html' },
-    { id: 'ajutor',          label: 'Ajutor',          href: 'ajutor.html' },
-    { id: 'preturi',         label: 'Prețuri',         href: 'preturi.html' },
-    { id: 'descarcare',      label: 'Descarcă',        href: 'descarcare.html' },
+    { id: 'functionalitati', label: 'Funcționalități', href: '/functionalitati' },
+    { id: 'ajutor',          label: 'Ajutor',          href: '/ajutor' },
+    { id: 'preturi',         label: 'Prețuri',         href: '/preturi' },
+    { id: 'descarcare',      label: 'Descarcă',        href: '/descarcare' },
   ];
 
   return (
-    <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
-      <div className="nav-inner">
-        <a href="/" className="nav-brand">
-          <div className="logo-mark"><MIcon name="scales" size={20} stroke={1.4} /></div>
-          <span className="word">LEX<b>·</b>AI</span>
-        </a>
-        <div className="nav-links">
-          {links.map(l => (
-            <a key={l.id} href={l.href} className={active === l.id ? 'active' : ''}>{l.label}</a>
-          ))}
+    <>
+      <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
+        <div className="nav-inner">
+          <a href="/" className="nav-brand">
+            <div className="logo-mark"><MIcon name="scales" size={20} stroke={1.4} /></div>
+            <span className="word">LEX<b>·</b>AI</span>
+          </a>
+          <div className="nav-links">
+            {links.map(l => (
+              <a key={l.id} href={l.href} className={active === l.id ? 'active' : ''}>{l.label}</a>
+            ))}
+          </div>
+          <div className="nav-cta">
+            <a href="/descarcare" className="btn btn-primary btn-sm nav-cta-desktop">
+              <MIcon name="download" size={13} /> Trial 30 zile
+            </a>
+            <button
+              className="nav-hamburger"
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label={menuOpen ? 'Închide meniu' : 'Deschide meniu'}
+            >
+              <MIcon name={menuOpen ? 'x' : 'menu'} size={22} />
+            </button>
+          </div>
         </div>
-        <div className="nav-cta">
-          <a href="/descarcare" className="btn btn-primary btn-sm">
-            <MIcon name="download" size={13} /> Trial 30 zile
+      </nav>
+      {menuOpen && (
+        <div className="nav-mobile-menu">
+          {links.map(l => (
+            <a key={l.id} href={l.href} className={active === l.id ? 'active' : ''} onClick={() => setMenuOpen(false)}>
+              {l.label}
+            </a>
+          ))}
+          <a href="/descarcare" className="btn btn-primary nav-mobile-cta" onClick={() => setMenuOpen(false)}>
+            <MIcon name="download" size={14} /> Descarcă · Trial 30 zile
           </a>
         </div>
-      </div>
-    </nav>
+      )}
+    </>
   );
 };
 
@@ -254,16 +283,16 @@ const Footer = () => (
             <li><a href="/functionalitati">Funcționalități</a></li>
             <li><a href="/preturi">Prețuri</a></li>
             <li><a href="/descarcare">Descarcă</a></li>
-            <li><a href="ajutor.html#legi">Legi acoperite</a></li>
+            <li><a href="/ajutor#legi">Legi acoperite</a></li>
           </ul>
         </div>
         <div className="footer-col">
           <h5>Resurse</h5>
           <ul>
             <li><a href="/ajutor">Documentație</a></li>
-            <li><a href="ajutor.html#faq">Întrebări frecvente</a></li>
-            <li><a href="ajutor.html#agenti">Ghid agenți</a></li>
-            <li><a href="ajutor.html#confidentialitate">Confidențialitate</a></li>
+            <li><a href="/ajutor#faq">Întrebări frecvente</a></li>
+            <li><a href="/ajutor#agenti">Ghid agenți</a></li>
+            <li><a href="/ajutor#confidentialitate">Confidențialitate</a></li>
           </ul>
         </div>
         <div className="footer-col">
