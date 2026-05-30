@@ -37,7 +37,7 @@ const HMAC_SECRET =
   'lexai-license-v1-xK9mP2qR7nL4wJ8s-CHANGE-BEFORE-SHIP';
 
 const FROM_EMAIL = process.env.FROM_EMAIL || 'LEX AI <noreply@lexai.software>';
-const DOWNLOAD_URL = 'https://lexai.software/descarcare';
+const DOWNLOAD_URL = 'https://www.lexai.software/descarcare';
 
 // ---------------------------------------------------------------------------
 // License key generation — mirrors licenseManager.js in the Electron app
