@@ -352,7 +352,7 @@
     // Replace the placeholder below with the monthly-specific link once created.
     const STRIPE_LINKS = {
       monthly: 'https://buy.stripe.com/eVq5kC6U6dnG9hHgSI3oA02',
-      perpetual: 'https://buy.stripe.com/eVq5kC6U6dnG9hHgSI3oA02', // TODO: separate lifetime link
+      perpetual: 'https://buy.stripe.com/bJeeVc6U6dnG51r8mc3oA03',
     };
 
     /* ============== Pricing cards + checkout ============== */
@@ -517,55 +517,24 @@
                     <div className="os-row total"><span>Total</span><b>€{total}</b></div>
                   </div>
 
-                  <div className="pay-method-grid">
-                    <div className={`pay-method ${form.method === 'card' ? 'selected' : ''}`} onClick={() => setForm({ ...form, method: 'card' })}>
-                      <div className="pm-icon"><MIcon name="credit-card" size={18} /></div>
-                      <div className="pm-text">
-                        <div className="pm-name">Card bancar</div>
-                        <div className="pm-desc">Visa, Mastercard. Procesat prin Stripe.</div>
+                  <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
+                    <div style={{ padding: '24px 20px', background: 'var(--bg-0)', borderRadius: 8, border: '1px solid var(--border)', marginBottom: 12 }}>
+                      <div style={{ width: 48, height: 48, background: 'var(--gold-bg)', border: '1px solid var(--gold-soft)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--gold)', margin: '0 auto 14px' }}>
+                        <MIcon name="lock" size={20} />
                       </div>
-                      <div className="pm-check"><MIcon name="check" size={11} stroke={3} /></div>
+                      <p style={{ fontSize: 14, color: 'var(--text)', margin: '0 0 8px', fontWeight: 500 }}>
+                        Plată securizată prin Stripe
+                      </p>
+                      <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
+                        Veți fi redirecționat la Stripe. Cheia de licență se trimite automat pe{' '}
+                        <b style={{ color: 'var(--gold)' }}>{form.email || 'email-ul introdus'}</b>{' '}
+                        imediat după confirmarea plății. Stripe acceptă card, transfer bancar și alte metode locale.
+                      </p>
                     </div>
-                    <div className={`pay-method ${form.method === 'transfer' ? 'selected' : ''}`} onClick={() => setForm({ ...form, method: 'transfer' })}>
-                      <div className="pm-icon"><MIcon name="briefcase" size={18} /></div>
-                      <div className="pm-text">
-                        <div className="pm-name">Transfer bancar</div>
-                        <div className="pm-desc">IBAN BCR · factură proformă · 1-2 zile lucrătoare.</div>
-                      </div>
-                      <div className="pm-check"><MIcon name="check" size={11} stroke={3} /></div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.06em' }}>
+                      <MIcon name="lock" size={11} /> CRIPTAT TLS · PROCESAT DE STRIPE · 3D SECURE
                     </div>
                   </div>
-
-                  {form.method === 'card' && (
-                    <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
-                      <div style={{ padding: '24px 20px', background: 'var(--bg-0)', borderRadius: 8, border: '1px solid var(--border)', marginBottom: 12 }}>
-                        <div style={{ width: 48, height: 48, background: 'var(--gold-bg)', border: '1px solid var(--gold-soft)', borderRadius: '50%', display: 'grid', placeItems: 'center', color: 'var(--gold)', margin: '0 auto 14px' }}>
-                          <MIcon name="lock" size={20} />
-                        </div>
-                        <p style={{ fontSize: 14, color: 'var(--text)', margin: '0 0 8px', fontWeight: 500 }}>
-                          Plată securizată prin Stripe
-                        </p>
-                        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
-                          Veți fi redirecționat la Stripe. Cheia de licență se trimite automat pe{' '}
-                          <b style={{ color: 'var(--gold)' }}>{form.email || 'email-ul introdus'}</b>{' '}
-                          imediat după confirmarea plății.
-                        </p>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.06em' }}>
-                        <MIcon name="lock" size={11} /> CRIPTAT TLS · PROCESAT DE STRIPE · 3D SECURE
-                      </div>
-                    </div>
-                  )}
-
-                  {form.method === 'transfer' && (
-                    <div className="iban-block">
-                      <div className="ib-row"><span className="ib-label">Beneficiar</span><span className="ib-value">LEX AI SRL</span></div>
-                      <div className="ib-row"><span className="ib-label">IBAN</span><span className="ib-value">RO47 RNCB 0072 1234 5678 0001 <button className="copy-btn"><MIcon name="copy" size={12} /></button></span></div>
-                      <div className="ib-row"><span className="ib-label">Banca</span><span className="ib-value">BCR — București</span></div>
-                      <div className="ib-row"><span className="ib-label">Referință plată</span><span className="ib-value">LEX-{Date.now().toString().slice(-6)}</span></div>
-                      <div className="ib-row"><span className="ib-label">Sumă</span><span className="ib-value">€{total}</span></div>
-                    </div>
-                  )}
                 </>
               )}
 
@@ -593,7 +562,7 @@
               <div style={{ flex: 1 }}></div>
               {step === 4 ? (
                 <button className="btn btn-primary" onClick={onClose}>Închide</button>
-              ) : step === 3 && form.method === 'card' ? (
+              ) : step === 3 ? (
                 <a
                   href={`${STRIPE_LINKS[plan]}?prefilled_email=${encodeURIComponent(form.email)}&client_reference_id=${plan}`}
                   className="btn btn-primary"
@@ -606,7 +575,7 @@
                 </a>
               ) : (
                 <button className="btn btn-primary" onClick={next}>
-                  {step === 3 ? 'Confirmă comanda' : 'Continuă'}
+                  Continuă
                   <MIcon name="arrow-right" size={13} />
                 </button>
               )}
