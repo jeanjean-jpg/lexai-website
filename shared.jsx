@@ -298,7 +298,7 @@ const Footer = () => (
         <div className="footer-col">
           <h5>Companie</h5>
           <ul>
-            <li><a href="mailto:contact@lexai.ro">Contact</a></li>
+            <li><a href="mailto:contact@lexai.software">Contact</a></li>
             <li><a href="#">Politica de confidențialitate</a></li>
             <li><a href="#">Termeni și condiții</a></li>
             <li><a href="#">GDPR</a></li>

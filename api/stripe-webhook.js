@@ -18,7 +18,7 @@
  *   STRIPE_WEBHOOK_SECRET  — Stripe Dashboard → Webhooks → endpoint → Signing secret
  *   RESEND_API_KEY         — resend.com → API Keys
  *   LEXAI_LICENSE_SECRET   — must match the Electron app's licenseManager.js HMAC_SECRET
- *   FROM_EMAIL             — optional, defaults to "LEX AI <noreply@lexai.ro>"
+ *   FROM_EMAIL             — optional, defaults to "LEX AI <noreply@lexai.software>"
  *
  * Stripe webhook events to enable:
  *   checkout.session.completed
@@ -36,8 +36,8 @@ const HMAC_SECRET =
   process.env.LEXAI_LICENSE_SECRET ||
   'lexai-license-v1-xK9mP2qR7nL4wJ8s-CHANGE-BEFORE-SHIP';
 
-const FROM_EMAIL = process.env.FROM_EMAIL || 'LEX AI <noreply@lexai.ro>';
-const DOWNLOAD_URL = 'https://lexai.ro/descarcare';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'LEX AI <noreply@lexai.software>';
+const DOWNLOAD_URL = 'https://lexai.software/descarcare';
 
 // ---------------------------------------------------------------------------
 // License key generation — mirrors licenseManager.js in the Electron app
@@ -139,7 +139,7 @@ function buildEmail(to, { planLabel, licenseKey, expiry, isRenewal }) {
 
     <!-- Footer -->
     <div style="padding:18px 32px;border-top:1px solid #2A3A4A;font-size:12px;color:#5C6A78;line-height:1.7;">
-      Probleme? Scrieți la <a href="mailto:support@lexai.ro" style="color:#C9A84C;text-decoration:none;">support@lexai.ro</a><br/>
+      Probleme? Scrieți la <a href="mailto:support@lexai.software" style="color:#C9A84C;text-decoration:none;">support@lexai.software</a><br/>
       LEX AI · Asistent juridic AI pentru cabinete de avocatură din România
     </div>
   </div>
