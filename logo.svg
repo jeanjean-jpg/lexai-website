@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+
+  <!-- Card background -->
+  <rect width="480" height="120" rx="14" fill="#131B23"/>
+  <rect width="480" height="120" rx="14" fill="none" stroke="#2A3A4A" stroke-width="1.5"/>
+
+  <!-- Icon container -->
+  <rect x="16" y="16" width="88" height="88" rx="12" fill="#0F1419"/>
+  <rect x="16" y="16" width="88" height="88" rx="12" fill="none" stroke="#C9A84C" stroke-width="1" stroke-opacity="0.4"/>
+  <!-- Subtle inner glow -->
+  <rect x="16" y="16" width="88" height="88" rx="12" fill="url(#goldGlow)" opacity="0.15"/>
+
+  <defs>
+    <radialGradient id="goldGlow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Scales icon — 24x24 source, scaled to 56x56, centered in 88x88 box at (16,16) -->
+  <!-- Center offset: 16 + (88-56)/2 = 32, vertical: 16 + (88-56)/2 = 32 -->
+  <g transform="translate(32,28) scale(2.33)" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M12 3v18"/>
+    <path d="M5 21h14"/>
+    <path d="M5 6h14"/>
+    <path d="M5 6l-3 7a3 3 0 0 0 6 0L5 6z"/>
+    <path d="M19 6l-3 7a3 3 0 0 0 6 0L19 6z"/>
+    <circle cx="12" cy="3.4" r="1" fill="#C9A84C" stroke="none"/>
+  </g>
+
+  <!-- Divider line -->
+  <line x1="120" y1="22" x2="120" y2="98" stroke="#2A3A4A" stroke-width="1"/>
+
+  <!-- Wordmark: LEX·AI -->
+  <text
+    x="142" y="68"
+    font-family="'Courier New', Courier, monospace"
+    font-size="42"
+    font-weight="700"
+    letter-spacing="5"
+    fill="#C9A84C"
+  >LEX<tspan fill="#8A7040">·</tspan>AI</text>
+
+  <!-- Tagline -->
+  <text
+    x="143" y="90"
+    font-family="'Courier New', Courier, monospace"
+    font-size="11"
+    letter-spacing="2.5"
+    fill="#5C6A78"
+  >ASISTENT JURIDIC AI · ROMÂNIA</text>
+
+</svg>
