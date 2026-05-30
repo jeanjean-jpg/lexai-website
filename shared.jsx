@@ -237,7 +237,7 @@ const Nav = ({ active }) => {
           </div>
           <div className="nav-cta">
             <a href="/descarcare" className="btn btn-primary btn-sm nav-cta-desktop">
-              <MIcon name="download" size={13} /> Trial 30 zile
+              <MIcon name="download" size={13} /> Descarcă gratuit
             </a>
             <button
               className="nav-hamburger"
@@ -257,7 +257,7 @@ const Nav = ({ active }) => {
             </a>
           ))}
           <a href="/descarcare" className="btn btn-primary nav-mobile-cta" onClick={() => setMenuOpen(false)}>
-            <MIcon name="download" size={14} /> Descarcă · Trial 30 zile
+            <MIcon name="download" size={14} /> Descarcă gratuit
           </a>
         </div>
       )}
