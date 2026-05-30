@@ -1,35 +1,36 @@
 /**
  * api/stripe-webhook.js — Vercel Serverless Function
  *
- * Handles two Stripe payment flows:
+ * Handles Stripe payment events for two flows:
  *
  * 1. SUBSCRIPTION (monthly €150, plink_1TcmcQAmTjv96v3ZcoQvGVz8)
- *    - checkout.session.completed (mode=subscription, amount=0 during trial)
- *      → Send 30-day trial key so the customer can use the app immediately
- *    - invoice.payment_succeeded (billing_reason=subscription_create|subscription_cycle)
- *      → Send fresh 35-day key on each successful billing cycle
+ *    - checkout.session.completed (mode=subscription)
+ *      → Send ONE permanent key tied to the Stripe customer ID.
+ *        The key never changes; the app validates online daily.
+ *    - invoice.upcoming (3 days before renewal)
+ *      → Send "your subscription renews in 3 days" email notification.
+ *    - invoice.payment_failed
+ *      → Send "payment failed, update your card" email with portal link.
+ *    - customer.subscription.deleted
+ *      → Send "subscription cancelled" confirmation email.
  *
- * 2. ONE-TIME (lifetime €2000, future payment link)
+ * 2. ONE-TIME (lifetime €2000, plink_bJeeVc6U6dnG51r8mc)
  *    - checkout.session.completed (mode=payment)
- *      → Send LIFETIME key immediately
+ *      → Send LIFETIME key immediately.
  *
- * Required env vars on Vercel (Settings → Environment Variables):
- *   STRIPE_SECRET_KEY      — Stripe Dashboard → Developers → API keys → Secret key
- *   STRIPE_WEBHOOK_SECRET  — Stripe Dashboard → Webhooks → endpoint → Signing secret
- *   RESEND_API_KEY         — resend.com → API Keys
- *   LEXAI_LICENSE_SECRET   — must match the Electron app's licenseManager.js HMAC_SECRET
- *   FROM_EMAIL             — optional, defaults to "LEX AI <noreply@lexai.software>"
+ * Required env vars:
+ *   STRIPE_SECRET_KEY      STRIPE_WEBHOOK_SECRET  RESEND_API_KEY
+ *   LEXAI_LICENSE_SECRET   FROM_EMAIL (optional)
  *
  * Stripe webhook events to enable:
- *   checkout.session.completed
- *   invoice.payment_succeeded
+ *   checkout.session.completed   invoice.upcoming
+ *   invoice.payment_failed       customer.subscription.deleted
  */
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const crypto = require('crypto');
 const { Resend } = require('resend');
 
-// Disable Vercel's automatic body parsing — Stripe needs the raw buffer for signature verification
 module.exports.config = { api: { bodyParser: false } };
 
 const HMAC_SECRET =
@@ -38,9 +39,10 @@ const HMAC_SECRET =
 
 const FROM_EMAIL = process.env.FROM_EMAIL || 'LEX AI <noreply@lexai.software>';
 const DOWNLOAD_URL = 'https://www.lexai.software/descarcare';
+const PORTAL_URL = 'https://www.lexai.software/api/billing-portal';
 
 // ---------------------------------------------------------------------------
-// License key generation — mirrors licenseManager.js in the Electron app
+// License key generation
 // ---------------------------------------------------------------------------
 function generateKey(plan, expiry, nonce) {
   const payload = {
@@ -61,15 +63,15 @@ function generateKey(plan, expiry, nonce) {
 function expiryInDays(days) {
   const d = new Date();
   d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10); // YYYY-MM-DD
+  return d.toISOString().slice(0, 10);
 }
 
 // ---------------------------------------------------------------------------
 // Email builder
 // ---------------------------------------------------------------------------
-function buildEmail(to, { planLabel, licenseKey, expiry, isRenewal }) {
+function buildEmail(to, { planLabel, licenseKey, expiry, subject, bodyNote }) {
   const isLifetime = expiry === 'LIFETIME';
-  const isTrial = !isLifetime && !isRenewal;
+  const isOnline = expiry === 'ONLINE';
 
   let expirySection;
   if (isLifetime) {
@@ -77,25 +79,18 @@ function buildEmail(to, { planLabel, licenseKey, expiry, isRenewal }) {
       <div style="background:#1A3A2A;border:1px solid #2A5A3A;border-radius:8px;padding:12px 16px;margin:0 0 20px;font-size:13px;color:#4A9B7F;">
         ✓ Această licență nu expiră niciodată.
       </div>`;
-  } else if (isTrial) {
+  } else if (isOnline) {
     expirySection = `
       <div style="background:#1A2332;border:1px solid #2A3A4A;border-radius:8px;padding:12px 16px;margin:0 0 20px;font-size:13px;color:#8A99A8;line-height:1.6;">
-        Cheia acoperă perioada de trial (30 de zile). Vei primi automat o cheie de reînnoire după prima plată.
+        Aceasta este cheia ta <b style="color:#F0F0F0;">permanentă</b> de licență — nu se schimbă niciodată.
+        Accesul se reînnoiește automat cu fiecare plată lunară, fără să fie nevoie să faci nimic.
       </div>`;
   } else {
     expirySection = `
       <div style="background:#1A2332;border:1px solid #2A3A4A;border-radius:8px;padding:12px 16px;margin:0 0 20px;font-size:13px;color:#8A99A8;line-height:1.6;">
-        Cheia este valabilă 35 de zile (până pe <b style="color:#F0F0F0;">${expiry}</b>). Vei primi automat o cheie nouă la fiecare reînnoire lunară.
+        ${bodyNote || ''}
       </div>`;
   }
-
-  const subject = isRenewal
-    ? `Reînnoire licență LEX AI — ${planLabel}`
-    : `Cheia ta de licență LEX AI — ${planLabel}`;
-
-  const greeting = isRenewal
-    ? 'Plata lunară a fost procesată cu succes. Iată cheia ta de licență reînnoită:'
-    : `Mulțumim pentru achiziție! Mai jos găsești cheia de licență pentru planul <b style="color:#C9A84C;">${planLabel}</b>.`;
 
   const html = `<!DOCTYPE html>
 <html lang="ro">
@@ -103,25 +98,22 @@ function buildEmail(to, { planLabel, licenseKey, expiry, isRenewal }) {
 <body style="margin:0;padding:40px 20px;background:#0F1419;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#F0F0F0;">
   <div style="max-width:560px;margin:0 auto;background:#131B23;border:1px solid #2A3A4A;border-radius:12px;overflow:hidden;">
 
-    <!-- Header -->
     <div style="padding:28px 32px 22px;border-bottom:1px solid #2A3A4A;text-align:center;">
       <div style="font-family:monospace;font-size:22px;font-weight:700;letter-spacing:6px;color:#C9A84C;">LEX·AI</div>
       <div style="font-size:12px;color:#8A99A8;margin-top:6px;letter-spacing:0.05em;">${planLabel.toUpperCase()}</div>
     </div>
 
-    <!-- Body -->
     <div style="padding:28px 32px;">
-      <p style="margin:0 0 18px;font-size:14px;color:#8A99A8;line-height:1.65;">${greeting}</p>
-
-      <!-- Key box -->
+      ${licenseKey ? `
       <div style="background:#0F1419;border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:18px 20px;margin:0 0 14px;">
         <div style="font-family:monospace;font-size:10px;letter-spacing:0.12em;color:#5C6A78;margin-bottom:10px;text-transform:uppercase;">Cheie de licență</div>
         <div style="font-family:monospace;font-size:11.5px;color:#C9A84C;word-break:break-all;line-height:1.7;">${licenseKey}</div>
       </div>
+      ` : ''}
 
       ${expirySection}
 
-      <!-- Activation steps -->
+      ${licenseKey ? `
       <div style="background:#1A2332;border-radius:8px;padding:16px 20px;margin:0 0 24px;">
         <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;color:#5C6A78;text-transform:uppercase;margin-bottom:12px;">Cum activezi</div>
         <ol style="margin:0;padding-left:18px;color:#8A99A8;font-size:13.5px;line-height:1.9;">
@@ -135,9 +127,9 @@ function buildEmail(to, { planLabel, licenseKey, expiry, isRenewal }) {
          style="display:inline-block;padding:12px 28px;background:#C9A84C;color:#0f1115;font-weight:700;font-size:14px;border-radius:7px;text-decoration:none;">
         Descarcă LEX AI →
       </a>
+      ` : ''}
     </div>
 
-    <!-- Footer -->
     <div style="padding:18px 32px;border-top:1px solid #2A3A4A;font-size:12px;color:#5C6A78;line-height:1.7;">
       Probleme? Scrieți la <a href="mailto:support@lexai.software" style="color:#C9A84C;text-decoration:none;">support@lexai.software</a><br/>
       LEX AI · Asistent juridic AI pentru cabinete de avocatură din România
@@ -150,7 +142,7 @@ function buildEmail(to, { planLabel, licenseKey, expiry, isRenewal }) {
 }
 
 // ---------------------------------------------------------------------------
-// Raw body reader (needed because bodyParser is disabled)
+// Raw body reader
 // ---------------------------------------------------------------------------
 async function getRawBody(req) {
   return new Promise((resolve, reject) => {
@@ -167,8 +159,8 @@ async function getRawBody(req) {
 
 /**
  * checkout.session.completed
- * - mode=subscription → 30-day trial key (Stripe trial runs in parallel)
- * - mode=payment      → LIFETIME key (for future one-time payment link)
+ * - mode=subscription → permanent key tied to Stripe customer ID (never rotates)
+ * - mode=payment      → LIFETIME key
  */
 async function handleCheckout(session, resend) {
   const email = session.customer_details?.email || session.customer_email;
@@ -177,68 +169,116 @@ async function handleCheckout(session, resend) {
     return;
   }
 
-  let plan, expiry, planLabel;
+  let key, planLabel, expiry, subject;
 
   if (session.mode === 'payment') {
-    // One-time lifetime purchase
-    plan = 'lifetime';
-    expiry = 'LIFETIME';
+    key = generateKey('lifetime', 'LIFETIME', session.id);
     planLabel = 'Licență Perpetuă';
+    expiry = 'LIFETIME';
+    subject = 'Cheia ta de licență LEX AI — Licență Perpetuă';
   } else {
-    // Subscription — send a trial key that covers Stripe's 30-day trial period
-    plan = 'monthly';
-    expiry = expiryInDays(30);
-    planLabel = 'Abonament Lunar · Trial';
+    // Subscription: nonce = Stripe customer ID so validate-license can look it up
+    key = generateKey('monthly', 'ONLINE', session.customer);
+    planLabel = 'Abonament Lunar';
+    expiry = 'ONLINE';
+    subject = 'Cheia ta de licență LEX AI — Abonament Lunar';
   }
 
-  const key = generateKey(plan, expiry, session.id);
-  console.log(`[webhook] checkout.session.completed: mode=${session.mode} email=${email} plan=${plan} expiry=${expiry}`);
+  console.log(`[webhook] checkout.session.completed: mode=${session.mode} email=${email} customer=${session.customer}`);
 
-  const emailPayload = buildEmail(email, { planLabel, licenseKey: key, expiry, isRenewal: false });
+  const emailPayload = buildEmail(email, { planLabel, licenseKey: key, expiry, subject });
   const { error } = await resend.emails.send(emailPayload);
   if (error) console.error('[webhook] Resend error:', error);
   else console.log(`[webhook] Key emailed to ${email}`);
 }
 
 /**
- * invoice.payment_succeeded
- * Fires on every successful subscription payment (including after trial ends).
- * We issue a fresh 35-day key so the customer stays active through the next cycle.
+ * invoice.upcoming — fires 3 days before renewal (configure in Stripe Dashboard
+ * → Settings → Subscriptions → Upcoming invoice reminders → 3 days).
  */
-async function handleInvoicePayment(invoice, resend) {
-  // Skip zero-amount invoices (trial, free adjustments, etc.)
-  if (!invoice.amount_paid || invoice.amount_paid === 0) {
-    console.log('[webhook] Skipping zero-amount invoice', invoice.id);
-    return;
-  }
-  // Only handle subscription billing
-  const validReasons = ['subscription_create', 'subscription_cycle', 'subscription_update'];
-  if (!validReasons.includes(invoice.billing_reason)) {
-    console.log(`[webhook] Skipping invoice with billing_reason=${invoice.billing_reason}`);
-    return;
-  }
-
+async function handleInvoiceUpcoming(invoice, resend) {
   const email = invoice.customer_email;
-  if (!email) {
-    console.error('[webhook] No customer email on invoice', invoice.id);
-    return;
-  }
+  if (!email) return;
 
-  const expiry = expiryInDays(35);
-  const key = generateKey('monthly', expiry, invoice.id);
-  const isRenewal = invoice.billing_reason === 'subscription_cycle';
+  const renewalDate = invoice.next_payment_attempt
+    ? new Date(invoice.next_payment_attempt * 1000).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })
+    : 'în curând';
+  const amount = invoice.amount_due ? `€${(invoice.amount_due / 100).toFixed(0)}` : '€150';
 
-  console.log(`[webhook] invoice.payment_succeeded: email=${email} reason=${invoice.billing_reason} expiry=${expiry}`);
+  const subject = 'Abonamentul LEX AI se reînnoiește în 3 zile';
+  const bodyNote = `Abonamentul tău se va reînnoi automat pe <b style="color:#F0F0F0;">${renewalDate}</b> cu suma de <b style="color:#F0F0F0;">${amount}</b>. Nu este necesară nicio acțiune — plata se procesează automat.`;
+
+  console.log(`[webhook] invoice.upcoming: email=${email} renewalDate=${renewalDate}`);
 
   const emailPayload = buildEmail(email, {
     planLabel: 'Abonament Lunar',
-    licenseKey: key,
-    expiry,
-    isRenewal,
+    licenseKey: null,
+    expiry: null,
+    subject,
+    bodyNote,
   });
   const { error } = await resend.emails.send(emailPayload);
-  if (error) console.error('[webhook] Resend error:', error);
-  else console.log(`[webhook] ${isRenewal ? 'Renewal' : 'First-payment'} key emailed to ${email}`);
+  if (error) console.error('[webhook] Resend error (upcoming):', error);
+}
+
+/**
+ * invoice.payment_failed — card declined, expired card, etc.
+ * Includes a link to open the Stripe billing portal from the app.
+ */
+async function handlePaymentFailed(invoice, resend) {
+  const email = invoice.customer_email;
+  if (!email) return;
+
+  const subject = 'Plata LEX AI a eșuat — actualizați metoda de plată';
+  const bodyNote = `Plata de <b style="color:#F0F0F0;">€${(invoice.amount_due / 100).toFixed(0)}</b> nu a putut fi procesată. Accesul la LEX AI va fi suspendat dacă plata nu este reluată. Deschideți aplicația LEX AI → <b style="color:#F0F0F0;">Setări → Gestionează abonamentul</b> pentru a actualiza metoda de plată.`;
+
+  console.log(`[webhook] invoice.payment_failed: email=${email}`);
+
+  const emailPayload = buildEmail(email, {
+    planLabel: 'Abonament Lunar',
+    licenseKey: null,
+    expiry: null,
+    subject,
+    bodyNote,
+  });
+  const { error } = await resend.emails.send(emailPayload);
+  if (error) console.error('[webhook] Resend error (payment_failed):', error);
+}
+
+/**
+ * customer.subscription.deleted — subscription cancelled by user or Stripe.
+ */
+async function handleSubscriptionDeleted(subscription, resend) {
+  // Fetch customer email (not always on the subscription object)
+  let email;
+  try {
+    const customer = await stripe.customers.retrieve(subscription.customer);
+    email = customer.email;
+  } catch (_) {}
+
+  if (!email) {
+    console.error('[webhook] No email for subscription.deleted', subscription.id);
+    return;
+  }
+
+  const endDate = new Date(subscription.current_period_end * 1000).toLocaleDateString('ro-RO', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
+
+  const subject = 'Abonamentul LEX AI a fost anulat';
+  const bodyNote = `Abonamentul tău a fost anulat. Vei putea folosi LEX AI până pe <b style="color:#F0F0F0;">${endDate}</b>, după care accesul va fi suspendat. Dacă dorești să te reabonezi, vizitează <a href="https://www.lexai.software/preturi" style="color:#C9A84C;">lexai.software/preturi</a>.`;
+
+  console.log(`[webhook] subscription.deleted: email=${email} until=${endDate}`);
+
+  const emailPayload = buildEmail(email, {
+    planLabel: 'Abonament Lunar',
+    licenseKey: null,
+    expiry: null,
+    subject,
+    bodyNote,
+  });
+  const { error } = await resend.emails.send(emailPayload);
+  if (error) console.error('[webhook] Resend error (sub.deleted):', error);
 }
 
 // ---------------------------------------------------------------------------
@@ -268,13 +308,24 @@ module.exports = async (req, res) => {
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   try {
-    if (event.type === 'checkout.session.completed') {
-      await handleCheckout(event.data.object, resend);
-    } else if (event.type === 'invoice.payment_succeeded') {
-      await handleInvoicePayment(event.data.object, resend);
+    switch (event.type) {
+      case 'checkout.session.completed':
+        await handleCheckout(event.data.object, resend);
+        break;
+      case 'invoice.upcoming':
+        await handleInvoiceUpcoming(event.data.object, resend);
+        break;
+      case 'invoice.payment_failed':
+        await handlePaymentFailed(event.data.object, resend);
+        break;
+      case 'customer.subscription.deleted':
+        await handleSubscriptionDeleted(event.data.object, resend);
+        break;
+      default:
+        // Ignore other events — return 200 so Stripe doesn't retry
+        break;
     }
   } catch (err) {
-    // Log but return 200 — Stripe retries on non-2xx responses
     console.error('[webhook] Handler error:', err);
   }
 
