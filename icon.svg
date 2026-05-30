@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" rx="36" fill="#0F1419"/>
+  <rect width="200" height="200" rx="36" fill="url(#glow)"/>
+  <rect width="200" height="200" rx="36" fill="none" stroke="#C9A84C" stroke-width="3" stroke-opacity="0.3"/>
+
+  <!-- Scales icon — 24x24 source scaled to 120x120, centered in 200x200 → offset (40, 36) -->
+  <g transform="translate(40,36) scale(5)" stroke="#C9A84C" stroke-width="0.55" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M12 3v18"/>
+    <path d="M5 21h14"/>
+    <path d="M5 6h14"/>
+    <path d="M5 6l-3 7a3 3 0 0 0 6 0L5 6z"/>
+    <path d="M19 6l-3 7a3 3 0 0 0 6 0L19 6z"/>
+    <circle cx="12" cy="3.4" r="1" fill="#C9A84C" stroke="none"/>
+  </g>
+</svg>
