@@ -210,7 +210,7 @@
   <section style="padding: 72px 0 32px; text-align: center;">
     <div class="container-narrow">
       <div class="kicker" style="justify-content: center; display: inline-flex;">Funcționalități · LEX AI v1.0</div>
-      <h1 style="margin-top: 16px;">Doisprezece module pentru cabinetul tău.</h1>
+      <h1 style="margin-top: 16px;">Paisprezece module pentru cabinetul tău.</h1>
       <p class="lead" style="max-width: 620px; margin: 16px auto 0;">
         Chat multi-agent, corpus juridic offline, gestionare dosare, agendă, generare documente —
         toate într-o singură aplicație desktop, fără cloud, fără sincronizare externă.
@@ -225,12 +225,12 @@
     </div>
   </section>
 
-  <!-- Feature grid (12 features) -->
+  <!-- Feature grid (14 features) -->
   <section style="background: var(--bg-1); border-top: 1px solid var(--border);">
     <div class="container">
       <div class="section-heading">
         <div class="kicker">Funcționalități complete</div>
-        <h2>Doisprezece capabilități, în detaliu.</h2>
+        <h2>Paisprezece capabilități, în detaliu.</h2>
         <p>Apasă pe un card pentru detalii. Fiecare funcționalitate include o demonstrație vizuală.</p>
       </div>
       <div id="feat-grid-root"></div>
@@ -600,6 +600,23 @@
         details: 'Autentificare locală (parolă bcrypt) la pornirea aplicației. Sesiunea ține până la închidere sau timeout configurabil. Toate operațiile sunt logate cu user_id pentru audit. Permisiunile pot fi configurate la nivel de acțiune (citește dosar, șterge dosar, generează document, trimite la API, schimbă setări, etc.).',
         bullets: ['Conturi locale cu parolă criptată', 'Roluri preset: admin / asistent / read-only', 'Permisiuni custom — bifare granulară', 'Audit log per acțiune'],
       },
+      {
+        id: 'fisiere-sarcina',
+        icon: 'folder',
+        title: 'Fișiere per sarcină + atașări universale',
+        desc: 'Fiecare conversație poate avea propriile foldere și fișiere. Agentul citește exclusiv acel set — izolare totală între dosare, fără bleed de context.',
+        details: 'Butonul Fișiere din antetul conversației atașează foldere sau fișiere individuale legate de sarcină; ele înlocuiesc folderele globale ale agentului pentru acea conversație. DOCX/PDF/text sunt extrase integral (mammoth/pdf-parse), iar scurtăturile web .url către imagini sunt descărcate și afișate. Agentul primește un manifest complet al fișierelor (nu mai estimează câte sunt), iar conținutul este pus în cache pentru mesaje ulterioare rapide și ieftine.',
+        bullets: ['Foldere + fișiere atașate per conversație', 'Citește exclusiv fișierele sarcinii — zero bleed între cazuri', 'Agrafă & drag-and-drop acceptă orice tip de fișier', 'Manifest complet + prompt caching pentru viteză'],
+        mock: 'SARCINĂ: Dosar Popescu — apel\n────────────────────────────\nFIȘIERE ACCESIBILE (manifest)\n- intampinare.docx (docx)\n- hotarare_3730.pdf (pdf)\n- citatie.png (imagine)\n\n→ conținut extras integral + cache',
+      },
+      {
+        id: 'facturare',
+        icon: 'dollar-sign',
+        title: 'Facturare & costuri API transparente',
+        desc: 'Urmărești consumul direct în aplicație: contor live de tokeni pe sesiune, cost estimat și raport pe 30 de zile prin Admin API.',
+        details: 'Secțiunea Facturare din Setări oferă trei instrumente: linkuri directe către consola Anthropic (sold exact + adăugare credite), un contor live al sesiunii (tokeni intrare/ieșire, apeluri, cost estimat USD) și un raport de 30 de zile bazat pe cheia Admin API (sk-ant-admin…), criptată local cu Windows DPAPI. Estimarea folosește prețurile Sonnet 4.6.',
+        bullets: ['Contor live de consum pe sesiune', 'Cost estimat în USD per conversație', 'Raport 30 zile via Admin API', 'Cheie Admin criptată local (DPAPI)'],
+      },
     ];
 
     const AGENT_MINI = [
@@ -611,7 +628,7 @@
       { name: 'Fiscal', d: 'L.227/2015' },
       { name: 'Administrativ', d: 'L.554/2004' },
       { name: 'Redactor', d: 'Universal' },
-      { name: 'Cercetare', d: 'Opus 4.7' },
+      { name: 'Cercetare', d: 'Opus 4.8' },
     ];
 
     const FeatGrid = () => {

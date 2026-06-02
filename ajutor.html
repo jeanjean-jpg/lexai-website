@@ -509,7 +509,15 @@
       <p>Fiecare fișier indexat primește un rezumat scurt generat de Claude Haiku (5-8 propoziții). Rezumatele sunt vizibile în panoul Fișiere și sunt folosite pentru retrieval rapid când agentul caută documente.</p>
 
       <h3 id="atasare-doc">Atașare document la conversație</h3>
-      <p>În chat → pictograma <code>📎</code> → selectează fișier(e). Agentul primește textul integral al documentului ca context. Pentru documente foarte lungi (>50 pagini), folosește în loc <code>@nume-document</code> care apelează retrieval pe paragrafe.</p>
+      <p>În chat → pictograma <code>📎</code> sau trage fișierele direct peste fereastră (drag-and-drop). Ambele metode acceptă <strong>orice tip de fișier</strong>; textul din DOCX, PDF și fișiere text este extras integral, imaginile sunt trimise lui Claude Vision, iar scurtăturile web <code>.url</code> către imagini sunt descărcate automat. Atașările cu agrafa sunt valabile pentru mesajul respectiv.</p>
+
+      <h3 id="fisiere-sarcina">Fișiere per sarcină</h3>
+      <p>Pentru fișiere legate permanent de o conversație, folosește butonul <code>📁 Fișiere</code> din antetul chatului. Atașezi foldere sau fișiere individuale care rămân disponibile pe toată durata sarcinii. Când o sarcină are fișiere atașate, agentul citește <strong>exclusiv</strong> acel set — înlocuiesc folderele globale ale agentului, asigurând izolare totală între dosare (fără bleed de context).</p>
+      <ul>
+        <li>Agentul primește un <strong>manifest complet</strong> al fișierelor — știe exact câte sunt și care.</li>
+        <li>Conținutul documentelor este pus în <strong>cache</strong>, deci mesajele ulterioare sunt rapide și mai ieftine.</li>
+        <li>Poți atașa fișiere chiar înainte de a începe conversația — sarcina se creează automat.</li>
+      </ul>
 
       <h3 id="generare-doc">Generarea documentelor</h3>
       <p>Cere agentului <em>"Redactează o cerere/contract/notificare pentru [situație]"</em>. Răspunsul include un bloc structurat pe care aplicația îl detectează și îl salvează ca fișier.</p>
@@ -569,6 +577,9 @@
       <h3 id="marcare-rezolvat">Marcarea ca rezolvat</h3>
       <p>În agenda → click pe termen → <code>Marchează rezolvat</code>. Istoricul rămâne accesibil. Termenele rezolvate nu mai apar în notificările zilnice.</p>
 
+      <h3 id="filtru-expirate">Filtrul Expirate</h3>
+      <p>Termenele depășite nu mai aglomerează categoria <code>Urgente</code> — au propriul filtru <code>Expirate</code> (după <code>Rezolvate</code>), cu un contor separat. Click pe orice termen expirat pentru a-l reprograma (dată nouă) sau a-l marca rezolvat.</p>
+
       <!-- Setări -->
       <h2 id="setari" class="toc-anchor">Setări</h2>
 
@@ -590,6 +601,14 @@
 
       <h3 id="monitorul">Monitorul Oficial RSS</h3>
       <p>Activează în Setări → <code>Monitorul Oficial</code>. Sistem polling la RSS-ul oficial, parsare și notificare când apare o lege în categoriile bifate (Penal, Civil, Fiscal, etc.). Notificările apar în panoul Notificări și pot declanșa o re-indexare automată dacă activezi opțiunea.</p>
+
+      <h3 id="facturare">Facturare &amp; costuri API</h3>
+      <p>Setări → <code>Facturare &amp; Costuri API</code> oferă trei instrumente pentru urmărirea consumului:</p>
+      <ul>
+        <li><strong>Consolă Anthropic</strong> — butoane directe către sold și adăugare credite (soldul exact e disponibil doar în consolă).</li>
+        <li><strong>Consum sesiune</strong> — contor live: tokeni intrare/ieșire, apeluri și cost estimat în USD.</li>
+        <li><strong>Raport 30 zile</strong> — cheltuieli zilnice prin cheia Admin API (<code>sk-ant-admin…</code>), criptată local cu DPAPI. Disponibil pentru contul Avocat.</li>
+      </ul>
 
       <h3 id="utilizatori">Gestionare utilizatori</h3>
       <p>Suport pentru avocat + asistenți, fiecare cu cont local. Permisiuni configurabile:</p>

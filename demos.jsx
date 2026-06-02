@@ -122,7 +122,7 @@ const AGENTS_FULL = [
   },
   {
     id: 'cercetare', name: 'Cercetare Juridică', initial: '⊕', opus: true,
-    domain: 'Opus 4.7 · analize aprofundate',
+    domain: 'Opus 4.8 · analize aprofundate',
     desc: 'Memo-uri structurate, jurisprudență',
     q: 'Există jurisprudență ICCJ recentă privind admisibilitatea probelor obținute prin interceptare în lipsa autorizării judecătorului?',
     a: [
@@ -186,7 +186,7 @@ const AgentDemo = () => {
               <div className="agent-mini-name">{active.name}</div>
               <div className="agent-mini-model">
                 <span className="status-dot"></span>
-                {active.opus ? 'claude-opus-4-7' : 'claude-sonnet-4-5'} · context: 12 articole injectate
+                {active.opus ? 'claude-opus-4-8' : 'claude-sonnet-4-6'} · context: 12 articole injectate
               </div>
             </div>
           </div>

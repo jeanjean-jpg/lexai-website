@@ -44,14 +44,17 @@ const NAV_GROUPS = [
     items: [
       { id: 'corpus', label: 'Corpus juridic' },
       { id: 'documente', label: 'Documente și fișiere' },
+      { id: 'fisiere-sarcina', label: 'Fișiere per sarcină', sub: true },
       { id: 'dosare', label: 'Dosare' },
       { id: 'agenda', label: 'Agenda' },
+      { id: 'filtru-expirate', label: 'Filtrul Expirate', sub: true },
     ],
   },
   {
     title: 'Administrare',
     items: [
       { id: 'setari', label: 'Setări' },
+      { id: 'facturare', label: 'Facturare & costuri', sub: true },
       { id: 'confidentialitate', label: 'Confidențialitate' },
       { id: 'faq', label: 'FAQ' },
       { id: 'legi', label: 'Legi acoperite' },
