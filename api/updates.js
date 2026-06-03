@@ -1,25 +1,24 @@
 /**
- * api/updates/[...path].js — Vercel Serverless Function (catch-all)
+ * api/updates.js — Vercel Serverless Function
  *
  * License-gated update gateway for the Squirrel.Windows auto-updater.
  *
- * The desktop app sets its feed URL to:
+ * Routed via a vercel.json rewrite:
+ *   /api/updates/:path*  ->  /api/updates?path=:path*
+ * so the desktop feed URL works unchanged:
  *   https://www.lexai.software/api/updates/<licenseKey>/win32
  * Squirrel then requests:
- *   .../<licenseKey>/win32/RELEASES
- *   .../<licenseKey>/win32/LexAI-x.y.z-full.nupkg   (and delta)
+ *   .../<licenseKey>/win32/RELEASES   and   .../<licenseKey>/win32/<file>.nupkg
  *
- * We validate the key (HMAC + Stripe for monthly), and for an entitled request
- * 302-redirect to the matching asset on the PUBLIC GitHub Releases repo:
- *   https://github.com/jeanjean-jpg/lexai-releases/releases/latest/download/<file>
+ * We validate the key (HMAC + Stripe for monthly) and 302-redirect an entitled
+ * request to the matching asset on the PUBLIC GitHub Releases repo.
  *
  * Entitlement:
- *   LIFETIME            → always served (lifetime updates)
- *   MONTHLY active/trial→ served
- *   MONTHLY lapsed      → 403 (their installed app stays, but stops auto-updating;
- *                          runtime read-only is the real enforcement)
- *   trial / invalid key → served latest (binaries are public anyway; this lets
- *                          trial users stay current so they can convert)
+ *   LIFETIME             -> always served (lifetime updates)
+ *   MONTHLY active/trial -> served
+ *   MONTHLY lapsed       -> 403 (app stops auto-updating; runtime read-only is
+ *                           the real enforcement)
+ *   trial / invalid key  -> served latest (binaries are public anyway)
  */
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -50,7 +49,6 @@ function verify(rawKey) {
   }
 }
 
-// Returns true if this key is entitled to receive updates right now.
 async function isEntitled(key) {
   const payload = verify(key);
   if (!payload) return true; // trial / unknown — public binaries, runtime-gated
@@ -66,14 +64,12 @@ async function isEntitled(key) {
       ]);
       return !!(active.data[0] || trialing.data[0]);
     } catch (_) {
-      // On a Stripe outage, fail open so paying users aren't blocked from updates.
-      return true;
+      return true; // Stripe outage — don't block paying users from updates
     }
   }
   return true;
 }
 
-// Only allow the file names Squirrel actually requests.
 function safeAsset(file) {
   if (file === 'RELEASES') return 'RELEASES';
   if (/^[A-Za-z0-9._-]+\.nupkg$/.test(file)) return file;
@@ -89,11 +85,13 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // req.query.path = ['<key>', 'win32', '<file>']
-  const parts = (req.query && req.query.path) || [];
-  if (!Array.isArray(parts) || parts.length < 3) {
-    return res.status(400).json({ error: 'bad_path' });
-  }
+  // The rewrite delivers the path as a slash-joined string in req.query.path;
+  // accept an array too for safety.
+  let raw = (req.query && req.query.path) || '';
+  if (Array.isArray(raw)) raw = raw.join('/');
+  const parts = String(raw).split('/').filter(Boolean);
+  if (parts.length < 3) return res.status(400).json({ error: 'bad_path' });
+
   const key = decodeURIComponent(parts[0]);
   const platform = parts[1];
   const file = parts[parts.length - 1];
@@ -106,7 +104,6 @@ module.exports = async (req, res) => {
   const entitled = await isEntitled(key);
   if (!entitled) return res.status(403).json({ error: 'not_entitled' });
 
-  // 302 to the public GitHub Releases asset.
   res.setHeader('Location', `${GITHUB_BASE}/${asset}`);
   return res.status(302).end();
 };
