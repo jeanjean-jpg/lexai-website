@@ -45,6 +45,7 @@ const NAV_GROUPS = [
       { id: 'corpus', label: 'Corpus juridic' },
       { id: 'documente', label: 'Documente și fișiere' },
       { id: 'fisiere-sarcina', label: 'Fișiere per sarcină', sub: true },
+      { id: 'legi-proprii', label: 'Legi proprii', sub: true },
       { id: 'dosare', label: 'Dosare' },
       { id: 'agenda', label: 'Agenda' },
       { id: 'filtru-expirate', label: 'Filtrul Expirate', sub: true },
