@@ -216,6 +216,7 @@ const Nav = ({ active }) => {
   }, [menuOpen]);
 
   const links = [
+    { id: 'home',            label: 'Acasă',           href: '/' },
     { id: 'functionalitati', label: 'Funcționalități', href: '/functionalitati' },
     { id: 'ajutor',          label: 'Ajutor',          href: '/ajutor' },
     { id: 'preturi',         label: 'Prețuri',         href: '/preturi' },
