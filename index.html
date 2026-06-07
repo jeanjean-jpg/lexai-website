@@ -33,8 +33,8 @@
         <a href="/preturi" class="btn btn-secondary btn-lg">Vezi prețuri</a>
       </div>
 
-      <!-- App preview teaser -->
-      <div id="hero-preview" style="margin-top: 80px; max-width: 980px; margin-left: auto; margin-right: auto;"></div>
+      <!-- Interactive agent demo -->
+      <div id="agent-demo-root" style="margin-top: 80px; max-width: 980px; margin-left: auto; margin-right: auto;"></div>
     </div>
   </section>
 
@@ -70,20 +70,6 @@
       </div>
     </div>
   </div>
-
-  <!-- ====================================================================
-       AGENT DEMO
-       ==================================================================== -->
-  <section>
-    <div class="container">
-      <div class="section-heading">
-        <div class="kicker">Demonstrație interactivă · agenți</div>
-        <h2>Nouă agenți. Fiecare specializat pe o ramură de drept.</h2>
-        <p>Selectează un agent și vezi un răspuns simulat. Fiecare răspuns citează articole reale din corpusul juridic intern.</p>
-      </div>
-      <div id="agent-demo-root"></div>
-    </div>
-  </section>
 
   <!-- ====================================================================
        CORPUS DEMO
@@ -183,90 +169,6 @@
       </div>
     );
     ReactDOM.createRoot(document.getElementById('hero-wordmark')).render(<Wordmark />);
-
-    /* Hero preview — tiny app teaser */
-    const HeroPreview = () => (
-      <div className="mock reveal in" style={{ marginTop: 0 }}>
-        <div className="mock-titlebar">
-          <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
-          <span className="tb-title">LEX·AI — Asistent Juridic</span>
-          <span className="tb-right" style={{ marginLeft: 'auto', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)' }}>
-            ACTIV · Av. Civil · claude-sonnet-4-6
-          </span>
-        </div>
-        <div className="hero-preview-grid" style={{ minHeight: 360 }}>
-          <div className="hero-preview-sidebar" style={{ background: 'var(--bg-2)', borderRight: '1px solid var(--border)', padding: '14px 10px' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em', color: 'var(--text-dim)', textTransform: 'uppercase', padding: '0 4px 10px' }}>
-              Agenți
-            </div>
-            {[
-              {n:'Penal', c:'#dcb43c', active: false},
-              {n:'Civil', c:'#dcb43c', active: true},
-              {n:'Imobiliar', c:'#6e6e7a', active: false},
-              {n:'Comercial', c:'#6e6e7a', active: false},
-              {n:'Familie', c:'#6e6e7a', active: false},
-              {n:'Fiscal', c:'#6e6e7a', active: false},
-              {n:'Administrativ', c:'#6e6e7a', active: false},
-              {n:'Redactor', c:'#6e6e7a', active: false},
-              {n:'Cercetare', c:'#c8a8e0', active: false},
-            ].map((a, i) => (
-              <div key={i} style={{
-                display: 'flex', alignItems: 'center', gap: 8,
-                padding: '6px 8px',
-                borderRadius: 4,
-                background: a.active ? 'var(--gold-bg)' : 'transparent',
-                fontSize: 12, color: a.active ? 'var(--gold)' : 'var(--text-muted)',
-                marginBottom: 2,
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: a.c }}></span>
-                {a.n}
-              </div>
-            ))}
-          </div>
-          <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{
-              alignSelf: 'flex-end',
-              padding: '8px 14px',
-              background: 'rgba(220,180,60,0.10)',
-              border: '1px solid rgba(220,180,60,0.22)',
-              borderRadius: '8px 8px 2px 8px',
-              fontSize: 13, color: '#f0e0b3', maxWidth: '75%',
-            }}>
-              Pregătește o cerere de chemare în judecată pentru recuperarea creanței de 47.500 lei (factură neachitată din mai 2025).
-            </div>
-            <div style={{
-              padding: '12px 14px',
-              background: 'var(--bg-2)',
-              border: '1px solid var(--border)',
-              borderRadius: '8px 8px 8px 2px',
-              fontSize: 13, color: 'var(--text)', maxWidth: '85%',
-              lineHeight: 1.55,
-            }}>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', marginBottom: 6, letterSpacing: '0.04em' }}>
-                AV. CIVIL · 12 ARTICOLE INJECTATE
-              </div>
-              Cererea poate fi întemeiată pe <span className="cite-ref">art. 1.523 Cod Civil</span> (răspundere contractuală) și <span className="cite-ref">art. 194 CPC</span>. Termenul de prescripție este de <em style={{color:'var(--gold)', fontStyle:'normal'}}>3 ani</em> de la scadență — încadrare confortabilă. Redactez documentul complet?
-            </div>
-            <div style={{
-              display: 'inline-flex', alignSelf: 'flex-start',
-              gap: 10, padding: '10px 14px',
-              background: 'var(--bg-3)',
-              border: '1px solid var(--border)',
-              borderLeft: '3px solid var(--green)',
-              borderRadius: 6,
-              fontSize: 12,
-            }}>
-              <span style={{ width: 24, height: 30, background: 'linear-gradient(180deg, #2a4068, #1e304e)', borderRadius: 2, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-mono)', fontSize: 8, color: '#9ab8dd', fontWeight: 600 }}>DOCX</span>
-              <div>
-                <div style={{ fontWeight: 600, color: 'var(--text)' }}>cerere-chemare-in-judecata-v1.docx</div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)' }}>8 pagini · 2.184 cuvinte · gata de descărcat</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-    ReactDOM.createRoot(document.getElementById('hero-preview')).render(<HeroPreview />);
 
     /* Interactive demos */
     ReactDOM.createRoot(document.getElementById('agent-demo-root')).render(<AgentDemo />);
