@@ -77,16 +77,21 @@
   </div>
 
   <!-- ====================================================================
-       CORPUS DEMO
+       CONFIDENTIALITATE
        ==================================================================== -->
   <section style="background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
     <div class="container">
       <div class="section-heading">
-        <div class="kicker">Demonstrație interactivă · corpus</div>
-        <h2>Corpus juridic intern, căutare cu BM25.</h2>
-        <p>Sistemul preia automat cele mai relevante 12 articole din coduri și le injectează ca context verificat pentru fiecare întrebare. Fără halucinații, fără invenții de articole.</p>
+        <div class="kicker">Confidențialitate</div>
+        <h2>Zero date în cloud.</h2>
+        <p>Aplicația rulează complet local. Documentele, conversațiile și dosarele nu ajung niciodată pe servere externe. Cheia API Anthropic rămâne pe calculatorul tău, criptată. Conform politicii Anthropic API, conversațiile nu sunt folosite pentru antrenament.</p>
       </div>
-      <div id="corpus-demo-root"></div>
+      <ul class="bullet-list" style="max-width: 720px; margin: 0 auto 28px;">
+        <li><span class="b-dot">▸</span><span>Bază de date SQLite locală, criptată</span></li>
+        <li><span class="b-dot">▸</span><span>Documentele sunt procesate local — doar extrase relevante trimise ca context</span></li>
+        <li><span class="b-dot">▸</span><span>Funcționează ca aplicație Electron desktop standalone</span></li>
+      </ul>
+      <div id="privacy-box" style="max-width: 720px; margin-left: auto; margin-right: auto;"></div>
     </div>
   </section>
 
@@ -122,13 +127,6 @@
     </div>
   </section>
 
-  <!-- Block 5: Privacy -->
-  <section>
-    <div class="container">
-      <div class="feat-block" id="b5"></div>
-    </div>
-  </section>
-
   <!-- ====================================================================
        TRUST STRIP
        ==================================================================== -->
@@ -161,7 +159,7 @@
 
   <script type="text/babel">
     const { Nav, Footer, Logo, Wordmark, Reveal, MIcon } = window;
-    const { AgentDemo, CorpusDemo } = window;
+    const { AgentDemo } = window;
 
     /* Nav + Footer */
     ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="" />);
@@ -177,7 +175,6 @@
 
     /* Interactive demos */
     ReactDOM.createRoot(document.getElementById('agent-demo-root')).render(<AgentDemo />);
-    ReactDOM.createRoot(document.getElementById('corpus-demo-root')).render(<CorpusDemo />);
 
     /* ============== Feature blocks ============== */
 
@@ -439,19 +436,14 @@
       </div>
     );
 
-    ReactDOM.createRoot(document.getElementById('b5')).render(
-      <FeatBlock
-        kicker="Confidențialitate"
-        title="Zero date în cloud."
-        text="Aplicația rulează complet local. Documentele, conversațiile și dosarele nu ajung niciodată pe servere externe. Cheia API Anthropic rămâne pe calculatorul tău, criptată. Conform politicii Anthropic API, conversațiile nu sunt folosite pentru antrenament."
-        bullets={[
-          'Bază de date SQLite locală, criptată',
-          'Documentele sunt procesate local — doar extrase relevante trimise ca context',
-          'Funcționează ca aplicație Electron desktop standalone',
-        ]}
-        mockTitle="Locația datelor"
-        mock={<Mock5 />}
-      />
+    ReactDOM.createRoot(document.getElementById('privacy-box')).render(
+      <div className="mock">
+        <div className="mock-titlebar">
+          <span className="dot-r"></span><span className="dot-y"></span><span className="dot-g"></span>
+          <span className="tb-title">Locația datelor</span>
+        </div>
+        <Mock5 />
+      </div>
     );
 
     /* Trust strip */
