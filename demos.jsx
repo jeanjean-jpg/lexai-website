@@ -176,6 +176,16 @@ const AgentDemo = () => {
             <div className="agent-card-desc">{a.desc}</div>
           </button>
         ))}
+        <div className="agent-card agent-card-add" aria-hidden="true">
+          <div className="agent-card-head">
+            <div className="agent-ring agent-ring-add">+</div>
+            <div className="agent-card-meta">
+              <div className="agent-card-name">Creează agent</div>
+              <div className="agent-card-domain">Agent personalizat · până la 15</div>
+            </div>
+          </div>
+          <div className="agent-card-desc">Definește propriul prompt și ramura de drept.</div>
+        </div>
       </div>
 
       <div className="agent-chat">

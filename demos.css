@@ -92,6 +92,18 @@
   padding-left: 46px;
 }
 
+/* "Create agent" affordance tile — shows the user can add their own */
+.agent-card-add {
+  border-style: dashed;
+  border-color: rgba(220,180,60,0.32);
+  background: transparent;
+}
+.agent-card-add .agent-card-name { color: var(--gold); }
+.agent-ring-add {
+  font-size: 20px;
+  line-height: 1;
+}
+
 /* Chat panel */
 .agent-chat {
   background: var(--bg-1);
