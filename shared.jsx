@@ -257,9 +257,6 @@ const Nav = ({ active }) => {
               {l.label}
             </a>
           ))}
-          <a href="/descarcare" className="btn btn-primary nav-mobile-cta" onClick={() => setMenuOpen(false)}>
-            <MIcon name="download" size={14} /> Descarcă gratuit
-          </a>
         </div>
       )}
     </>
