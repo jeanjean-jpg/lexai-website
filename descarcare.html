@@ -272,7 +272,7 @@
   <!-- Hero -->
   <section class="download-hero">
     <div class="container-narrow">
-      <div class="kicker" style="justify-content: center; display: inline-flex;">Descarcă · LEX AI v1.0.8</div>
+      <div class="kicker" style="justify-content: center; display: inline-flex;">Descarcă · LEX AI v1.0.9</div>
       <h1 style="margin-top: 16px;">Instalează-l în 5 minute.</h1>
       <p class="lead" style="max-width: 580px; margin: 16px auto 0;">
         Trial gratuit 30 de zile cu toate funcționalitățile. Fără card. Aduci propria cheie API Anthropic.
@@ -291,7 +291,7 @@
           </div>
           <div>
             <div class="os-name">Windows</div>
-            <div class="os-version">v<b>1.0.8</b> · 64-bit · Squirrel installer</div>
+            <div class="os-version">v<b>1.0.9</b> · 64-bit · Squirrel installer</div>
           </div>
           <div class="file-info">
             <div class="fi-row"><span class="fi-label">Fișier</span><span class="fi-value">LexAI-Setup.exe</span></div>
@@ -352,41 +352,35 @@
       <div class="release-notes">
         <div class="rn-head">
           <div>
-            <span class="rn-version">v1.0.2 · STABLE</span>
+            <span class="rn-version">v1.0.9 · STABLE</span>
           </div>
-          <span class="rn-date">12 MAI 2026</span>
+          <span class="rn-date">18 IUNIE 2026</span>
         </div>
 
         <h4>Funcționalități noi</h4>
         <ul>
-          <li><strong>Mod ORCHESTRAT</strong> — agentul coordonator descompune sarcini complexe și le delegă paralel către alți agenți</li>
-          <li><strong>Cercetare Juridică</strong> — agent nou pe claude-opus-4-7 pentru memo-uri și analize aprofundate</li>
-          <li><strong>OCR Tesseract</strong> — text extras din PDF scanate și imagini (română + engleză)</li>
-          <li><strong>Monitor RSS Monitorul Oficial</strong> — notificări automate pentru legi noi</li>
+          <li><strong>Mod pledoarie</strong> — comutator per sarcină: documentele generate devin mai ample și persuasive, în registru de pledoarie, fără a inventa fapte sau articole</li>
+          <li><strong>Fișiere sarcină</strong> — atașează foldere sau fișiere specifice unei sarcini; agentul citește exclusiv acel context</li>
+          <li><strong>Tab Expirate</strong> în Sarcini — termenele depășite, separate de cele active</li>
+          <li><strong>Indicator online/offline</strong> în bara de sus</li>
+          <li><strong>Actualizări automate cu confirmare</strong> — ești întrebat înainte de a descărca o versiune nouă</li>
         </ul>
 
         <h4>Îmbunătățiri</h4>
         <ul>
-          <li>Corpus juridic actualizat la versiunile în vigoare 05/2026 (+312 articole noi)</li>
-          <li>Retrieval BM25 cu stemming românesc — relevanță îmbunătățită cu ~18%</li>
-          <li>Generare DOCX cu stiluri ierarhice corecte (Heading 1-3, listă numerotată, diacritice)</li>
-          <li>UI: panou notificări reproiectat, scurtături tastatură (⌘K căutare globală)</li>
-          <li>Performanță: indexare inițială ~40% mai rapidă</li>
+          <li>Răspunsuri și documente curate — fără marcaje markdown reziduale (asteriscuri) în chat sau în actele generate</li>
+          <li>Regăsire mai precisă din corpus: rescriere interogare, rerank, verificarea citărilor și segmentare pe articole</li>
+          <li>Dosare: agenții citesc conținutul real al actelor (DOCX/PDF), nu doar denumirile</li>
+          <li>Buget de context mărit per sarcină (~100k tokens) pentru mai multe documente</li>
+          <li>Indexarea surselor web este reluabilă după întrerupere (utilă pentru codurile mari)</li>
         </ul>
 
-        <h4>Bug fixes</h4>
+        <h4>Remedieri</h4>
         <ul>
-          <li>Fixed: crash la deschidere PDF-uri cu structură non-standard</li>
-          <li>Fixed: rezumate Haiku trunchiate la documente lungi (&gt;50 pagini)</li>
-          <li>Fixed: detectare termene incorectă pentru date în format DD.MM.YYYY</li>
-          <li>Fixed: backup automat ratat după modificarea zonei de timp</li>
-        </ul>
-
-        <h4>Securitate</h4>
-        <ul>
-          <li>Actualizare dependențe Electron 28.3 → 28.4 (CVE-2026-0123)</li>
-          <li>Validare strictă URL-uri pentru fetch agent (whitelist domenii)</li>
-          <li>SQLCipher opțional activabil pentru baza de date</li>
+          <li>Eliminate asteriscurile (**) reziduale din conversații și din documentele DOCX/PDF/TXT</li>
+          <li>Versiunea aplicației este afișată corect în bara de titlu</li>
+          <li>Fereastra de actualizare rămâne afișată până la un răspuns explicit</li>
+          <li>Corectată buclă de repornire la instalarea actualizărilor (Squirrel)</li>
         </ul>
 
         <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.04em;">
