@@ -371,7 +371,7 @@
                 <span className="pc-amount">€150</span>
                 <span className="pc-unit">/ lună</span>
               </div>
-              <div className="pc-sub">Excl. TVA · Acces complet · Actualizări incluse</div>
+              <div className="pc-sub">TVA inclus · Acces complet · Actualizări incluse</div>
               <ul className="pc-features">
                 <li><MIcon name="check" size={14} /> Până la 15 agenți (9 șabloane + personalizați)</li>
                 <li><MIcon name="check" size={14} /> Corpus juridic complet (5.000+ articole)</li>
@@ -395,7 +395,7 @@
                 <span className="pc-amount">€2.000</span>
                 <span className="pc-unit">o singură dată</span>
               </div>
-              <div className="pc-sub">Excl. TVA · Plătești o dată, folosești pentru totdeauna</div>
+              <div className="pc-sub">TVA inclus · Plătești o dată, folosești pentru totdeauna</div>
               <ul className="pc-features">
                 <li><MIcon name="check" size={14} /> Toate funcționalitățile abonamentului</li>
                 <li><MIcon name="check" size={14} /> Fără plăți recurente</li>
@@ -433,9 +433,9 @@
       const upd = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
       const planLabel = plan === 'monthly' ? 'Abonament Lunar' : 'Licență Perpetuă';
+      // Prices are VAT-inclusive final amounts (match Stripe). No tax is added on top.
       const priceNet = plan === 'monthly' ? 150 : 2000;
-      const vat = form.b2b ? 0 : Math.round(priceNet * 0.19);
-      const total = priceNet + vat;
+      const total = priceNet;
       const unit = plan === 'monthly' ? '/ lună' : 'o singură dată';
 
       const next = () => setStep(s => Math.min(s + 1, 4));
@@ -513,7 +513,7 @@
                 <>
                   <div className="order-summary">
                     <div className="os-row"><span>{planLabel}</span><span>€{priceNet} {unit}</span></div>
-                    <div className="os-row"><span>{form.b2b ? 'TVA (inversare taxare)' : 'TVA 19%'}</span><span>€{vat}</span></div>
+                    <div className="os-row"><span>{form.b2b ? 'TVA (inversare taxare)' : 'TVA'}</span><span>{form.b2b ? '€0' : 'inclus'}</span></div>
                     <div className="os-row divider"></div>
                     <div className="os-row total"><span>Total</span><b>€{total}</b></div>
                   </div>
@@ -644,7 +644,7 @@
     const FAQ_ITEMS = [
       {
         q: 'Include TVA?',
-        a: 'Prețurile sunt fără TVA. Pentru clienții români persoane juridice, TVA-ul de 19% se aplică. Pentru clienții UE B2B cu cod VAT valid, se aplică inversare taxare (factură fără TVA).',
+        a: 'Da. Prețurile afișate sunt finale, cu TVA inclus — €150/lună, respectiv €2.000 pentru licența perpetuă, nu se adaugă nimic la plată. Pentru clienții UE B2B cu cod VAT valid se aplică inversarea taxării (factură fără TVA), conform legislației în vigoare.',
       },
       {
         q: 'Pot testa înainte de cumpărare?',
