@@ -6,7 +6,8 @@
     { "source": "/preturi", "destination": "/preturi.html" },
     { "source": "/functionalitati", "destination": "/functionalitati.html" },
     { "source": "/ajutor", "destination": "/ajutor.html" },
-    { "source": "/descarcare", "destination": "/descarcare.html" }
+    { "source": "/descarcare", "destination": "/descarcare.html" },
+    { "source": "/contact", "destination": "/contact.html" }
   ],
   "headers": [
     {

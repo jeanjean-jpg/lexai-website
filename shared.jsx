@@ -221,6 +221,7 @@ const Nav = ({ active }) => {
     { id: 'ajutor',          label: 'Ajutor',          href: '/ajutor' },
     { id: 'preturi',         label: 'Prețuri',         href: '/preturi' },
     { id: 'descarcare',      label: 'Descarcă',        href: '/descarcare' },
+    { id: 'contact',         label: 'Contact',         href: '/contact' },
   ];
 
   return (
@@ -296,7 +297,7 @@ const Footer = () => (
         <div className="footer-col">
           <h5>Companie</h5>
           <ul>
-            <li><a href="mailto:contact@lexai.software">Contact</a></li>
+            <li><a href="/contact">Contact</a></li>
             <li><a href="#">Politica de confidențialitate</a></li>
             <li><a href="#">Termeni și condiții</a></li>
             <li><a href="#">GDPR</a></li>

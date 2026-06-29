@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEX·AI — Contact</title>
+  <meta name="description" content="Contactează echipa LEX AI — suport tehnic, întrebări despre licență, facturare sau vânzări. Răspuns rapid pe WhatsApp." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="demos.css" />
+  <style>
+    .contact-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .contact-form {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+    }
+    .form-field { margin-bottom: 16px; }
+    .form-field label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 11px 13px;
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+    .form-field textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: 0;
+      border-color: var(--gold-dim);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-err {
+      background: rgba(200,70,70,0.1);
+      border: 1px solid rgba(200,70,70,0.35);
+      color: #e08a8a;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+    /* Success state */
+    .contact-success {
+      text-align: center;
+      padding: 36px 20px;
+    }
+    .contact-success .cs-circle {
+      width: 64px; height: 64px;
+      margin: 0 auto 20px;
+      background: var(--gold-bg);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      color: var(--gold);
+    }
+    .contact-success h3 { font-size: 20px; margin-bottom: 8px; }
+    .contact-success p { font-size: 14px; color: var(--text-muted); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+    /* WhatsApp support block */
+    .wa-block {
+      margin-top: 28px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 26px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .wa-icon {
+      flex-shrink: 0;
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      background: rgba(37,211,102,0.12);
+      border: 1px solid rgba(37,211,102,0.3);
+      display: grid; place-items: center;
+      color: #25D366;
+    }
+    .wa-text { flex: 1; }
+    .wa-text h4 { font-size: 15px; margin: 0 0 4px; color: var(--text); }
+    .wa-text p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.55; }
+    .wa-btn {
+      flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 18px;
+      background: #25D366;
+      color: #06281a;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: filter 0.15s;
+    }
+    .wa-btn:hover { filter: brightness(1.08); }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .wa-block { flex-direction: column; text-align: center; }
+      .wa-btn { width: 100%; justify-content: center; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <!-- Page header -->
+  <section style="padding: 80px 0 28px; text-align: center;">
+    <div class="container-narrow">
+      <div class="kicker" style="justify-content: center; display: inline-flex;">Contact · LEX AI</div>
+      <h1 style="margin-top: 16px;">Cum te putem ajuta?</h1>
+      <p class="lead" style="max-width: 560px; margin: 16px auto 0;">
+        Alege subiectul potrivit și scrie-ne — ajunge direct la echipa care se ocupă de el.
+        Pentru ajutor rapid, scrie-ne pe WhatsApp.
+      </p>
+    </div>
+  </section>
+
+  <!-- Form + WhatsApp -->
+  <section style="padding: 16px 0 80px;">
+    <div class="container">
+      <div class="contact-wrap">
+        <div id="contact-root"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+    const { Nav, Footer, MIcon } = window;
+
+    ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="contact" />);
+    ReactDOM.createRoot(document.getElementById('footer-root')).render(<Footer />);
+
+    // WhatsApp support — new business number
+    const WA_NUMBER = '34600397370';
+    const WA_TEXT = encodeURIComponent('Salut! Am nevoie de ajutor cu LEX AI: ');
+    const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_TEXT}`;
+
+    const CATEGORIES = [
+      { id: 'tehnic',      label: 'Problemă tehnică / eroare în aplicație' },
+      { id: 'licenta',     label: 'Activare licență / cheie' },
+      { id: 'facturare',   label: 'Facturare și plăți' },
+      { id: 'utilizare',   label: 'Ajutor cu utilizarea aplicației' },
+      { id: 'vanzari',     label: 'Întrebare înainte de cumpărare' },
+      { id: 'parteneriat', label: 'Parteneriat / colaborare' },
+      { id: 'altceva',     label: 'Altă întrebare' },
+    ];
+
+    const ContactForm = () => {
+      const [form, setForm] = useState({ name: '', email: '', category: 'tehnic', message: '', website: '' });
+      const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+      const [error, setError] = useState('');
+      const upd = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+
+      const submit = async (e) => {
+        e.preventDefault();
+        setError('');
+        if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+          setError('Te rugăm să introduci o adresă de email validă.');
+          return;
+        }
+        if (form.message.trim().length < 5) {
+          setError('Te rugăm să scrii un mesaj.');
+          return;
+        }
+        setStatus('sending');
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(form),
+          });
+          if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            throw new Error(data.error || 'Trimiterea a eșuat.');
+          }
+          setStatus('sent');
+        } catch (err) {
+          setError(err.message || 'A apărut o eroare. Încearcă din nou.');
+          setStatus('error');
+        }
+      };
+
+      if (status === 'sent') {
+        return (
+          <>
+            <div className="contact-form">
+              <div className="contact-success">
+                <div className="cs-circle"><MIcon name="check" size={28} stroke={2.5} /></div>
+                <h3>Mesaj trimis!</h3>
+                <p>
+                  Mulțumim — am primit mesajul tău și revenim pe <b style={{color:'var(--gold)'}}>{form.email}</b> cât
+                  de curând posibil. Pentru ajutor imediat, scrie-ne pe WhatsApp mai jos.
+                </p>
+              </div>
+            </div>
+            <WhatsAppBlock />
+          </>
+        );
+      }
+
+      return (
+        <>
+          <form className="contact-form" onSubmit={submit}>
+            {error && <div className="form-err">{error}</div>}
+
+            <div className="form-row">
+              <div className="form-field">
+                <label>Nume</label>
+                <input type="text" placeholder="Numele tău" value={form.name} onChange={upd('name')} />
+              </div>
+              <div className="form-field">
+                <label>Email *</label>
+                <input type="email" placeholder="avocat@cabinet.ro" value={form.email} onChange={upd('email')} required />
+              </div>
+            </div>
+
+            <div className="form-field">
+              <label>Subiect</label>
+              <select value={form.category} onChange={upd('category')}>
+                {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+              </select>
+            </div>
+
+            <div className="form-field">
+              <label>Mesaj *</label>
+              <textarea
+                placeholder="Descrie pe scurt problema sau întrebarea ta…"
+                value={form.message}
+                onChange={upd('message')}
+                required
+              />
+            </div>
+
+            {/* Honeypot — hidden from real users */}
+            <div className="hp" aria-hidden="true">
+              <label>Nu completa acest câmp</label>
+              <input type="text" tabIndex="-1" autoComplete="off" value={form.website} onChange={upd('website')} />
+            </div>
+
+            <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }} disabled={status === 'sending'}>
+              {status === 'sending' ? 'Se trimite…' : <>Trimite mesajul <MIcon name="arrow-right" size={14} /></>}
+            </button>
+          </form>
+
+          <WhatsAppBlock />
+        </>
+      );
+    };
+
+    const WhatsAppBlock = () => (
+      <div className="wa-block">
+        <div className="wa-icon"><MIcon name="chat" size={26} /></div>
+        <div className="wa-text">
+          <h4>Ai nevoie de ajutor rapid?</h4>
+          <p>Scrie-ne direct pe WhatsApp pentru instrucțiuni sau asistență cu aplicația. Răspundem cât de repede putem.</p>
+        </div>
+        <a className="wa-btn" href={WA_LINK} target="_blank" rel="noopener noreferrer">
+          <MIcon name="chat" size={16} /> Suport pe WhatsApp
+        </a>
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('contact-root')).render(<ContactForm />);
+  </script>
+</body>
+</html>
