@@ -289,7 +289,7 @@ const Footer = () => (
           <h5>Resurse</h5>
           <ul>
             <li><a href="/ajutor">Documentație</a></li>
-            <li><a href="/ajutor#faq">Întrebări frecvente</a></li>
+            <li><a href="/intrebari-frecvente">Întrebări frecvente</a></li>
             <li><a href="/ajutor#agenti">Ghid agenți</a></li>
             <li><a href="/ajutor#confidentialitate">Confidențialitate</a></li>
           </ul>
