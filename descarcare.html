@@ -272,7 +272,7 @@
   <!-- Hero -->
   <section class="download-hero">
     <div class="container-narrow">
-      <div class="kicker" style="justify-content: center; display: inline-flex;">Descarcă · LEX AI v1.0.14</div>
+      <div class="kicker" style="justify-content: center; display: inline-flex;">Descarcă · LEX AI v1.0.15</div>
       <h1 style="margin-top: 16px;">Instalează-l în 5 minute.</h1>
       <p class="lead" style="max-width: 580px; margin: 16px auto 0;">
         Trial gratuit 14 zile cu toate funcționalitățile. Fără card. Aduci propria cheie API Anthropic.
@@ -291,7 +291,7 @@
           </div>
           <div>
             <div class="os-name">Windows</div>
-            <div class="os-version">v<b>1.0.14</b> · 64-bit · Squirrel installer</div>
+            <div class="os-version">v<b>1.0.15</b> · 64-bit · Squirrel installer</div>
           </div>
           <div class="file-info">
             <div class="fi-row"><span class="fi-label">Fișier</span><span class="fi-value">LexAI-Setup.exe</span></div>
@@ -352,7 +352,33 @@
       <div class="release-notes">
         <div class="rn-head">
           <div>
-            <span class="rn-version">v1.0.14 · STABLE</span>
+            <span class="rn-version">v1.0.15 · STABLE</span>
+          </div>
+          <span class="rn-date">4 IULIE 2026</span>
+        </div>
+
+        <h4>Fiabilitate — citirea fișierelor și documente lungi</h4>
+        <ul>
+          <li><strong>PDF-uri scanate citite vizual</strong> — actele scanate (fotografii salvate ca PDF) sunt acum atașate direct și citite pagină cu pagină de agent, nu mai apar ca „conținut indisponibil"</li>
+          <li><strong>Documentele lungi nu se mai întrerup</strong> — limita de generare a fost mărită de 4 ori, iar dacă un act foarte lung atinge limita, agentul continuă automat de unde a rămas până finalizează documentul .docx</li>
+          <li><strong>Foldere citite complet, inclusiv subfoldere</strong> — fișierele din subdirectoarele unui dosar atașat sunt acum văzute de agent</li>
+          <li><strong>Transparență totală asupra fișierelor</strong> — agentul îți spune exact ce fișiere a putut citi și care nu (și de ce), în loc să răspundă ca și cum le-ar fi văzut pe toate</li>
+          <li><strong>Sarcinile lungi rămân rapide</strong> — conversațiile mari nu mai retrimit tot istoricul și imaginile vechi la fiecare mesaj</li>
+          <li><strong>Reîncercare automată la limitele API</strong> — erorile temporare Anthropic sunt reîncercate automat, iar mesajele de eroare sunt acum în română, cu soluția indicată</li>
+        </ul>
+
+        <h4>Funcționalități noi</h4>
+        <ul>
+          <li><strong>Previzualizare folder la atașare</strong> — când atașezi un folder vezi toate fișierele din el (inclusiv subfoldere), cu bife de selecție și marcaje: citibil, scanat — citit vizual, nesuportat</li>
+          <li><strong>Meniu la clic dreapta</strong> — Copiază / Taie / Lipește / Selectează tot, oriunde în aplicație</li>
+          <li><strong>Ctrl+A inteligent</strong> — selectează doar conversația, nu și meniurile sau barele aplicației</li>
+        </ul>
+      </div>
+
+      <div class="release-notes" style="margin-top: 20px;">
+        <div class="rn-head">
+          <div>
+            <span class="rn-version">v1.0.14</span>
           </div>
           <span class="rn-date">25 IUNIE 2026</span>
         </div>
