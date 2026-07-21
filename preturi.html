@@ -677,7 +677,7 @@
           <div className="calc-results">
             <div className={`calc-cell ${!perpetualWins ? 'win' : ''}`}>
               <div className="cc-label">Abonament Lunar</div>
-              <div className="cc-value">€{monthlyCost.toLocaleString('ro-RO', { maximumFractionDigits: 0 })}</div>
+              <div className="cc-value">€{monthlyCost.toLocaleString('ro-RO', { maximumFractionDigits: 2 })}</div>
               <div className="cc-sub">{months} × €49,50 / lună</div>
             </div>
             <div className={`calc-cell ${perpetualWins ? 'win' : ''}`}>
@@ -689,7 +689,7 @@
 
           <div className={`calc-verdict ${perpetualWins ? 'advantage' : ''}`}>
             {perpetualWins ? (
-              <>▸ La <b>{months} luni</b> de utilizare, licența perpetuă te economisește <b>€{(monthlyCost - perpetualCost).toLocaleString('ro-RO', { maximumFractionDigits: 0 })}</b> față de abonament.</>
+              <>▸ La <b>{months} luni</b> de utilizare, licența perpetuă te economisește <b>€{(monthlyCost - perpetualCost).toLocaleString('ro-RO', { maximumFractionDigits: 2 })}</b> față de abonament.</>
             ) : (
               <>▸ Pentru {months} {months === 1 ? 'lună' : 'luni'} de utilizare, abonamentul lunar e mai ieftin. Pragul de echilibru e la 11 luni.</>
             )}
