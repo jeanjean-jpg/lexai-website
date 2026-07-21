@@ -285,7 +285,7 @@
       <div class="kicker" style="justify-content: center; display: inline-flex;">Prețuri · LEX AI v1.0</div>
       <h1 style="margin-top: 16px;">Două opțiuni. Aceeași aplicație completă.</h1>
       <p class="lead" style="max-width: 580px; margin: 16px auto 0;">
-        Abonament lunar pentru flexibilitate, sau licență perpetuă care se amortizează în 14 luni.
+        Abonament lunar pentru flexibilitate, sau licență perpetuă care se amortizează în aproximativ 11 luni.
         Cheia API Anthropic e separată — plătești Anthropic direct pe baza utilizării.
       </p>
     </div>
@@ -297,7 +297,7 @@
       <div id="pricing-cards"></div>
       <div class="compare-note">
         Ambele opțiuni includ aceeași aplicație completă, toate funcționalitățile, toți agenții (până la 15, inclusiv agenți personalizați).
-        Abonamentul e ideal pentru cabinete care vor flexibilitate. <b>Licența perpetuă se amortizează în 14 luni</b>
+        Abonamentul e ideal pentru cabinete care vor flexibilitate. <b>Licența perpetuă se amortizează în aproximativ 11 luni</b>
         și include actualizări gratuite pe viață.
       </div>
     </div>
@@ -352,9 +352,13 @@
     // Monthly and lifetime need separate Stripe Payment Links (different products/prices).
     // Replace the placeholder below with the monthly-specific link once created.
     const STRIPE_LINKS = {
-      monthly: 'https://buy.stripe.com/eVq5kC6U6dnG9hHgSI3oA02',
-      perpetual: 'https://buy.stripe.com/bJeeVc6U6dnG51r8mc3oA03',
+      monthly: 'https://buy.stripe.com/00wcN43HUerK0Lb45W3oA07',
+      perpetual: 'https://buy.stripe.com/28EbJ06U66Zi65v9qg3oA064',
     };
+    // 45%-off promotion code (Stripe coupon "45% Discount", forever). Auto-applied
+    // at checkout via ?prefilled_promo_code=. To END the promo: remove this from
+    // the URL below (and deactivate the code in Stripe) — the products/links stay.
+    const PROMO_CODE = 'V5K9OUXM';
 
     /* ============== Pricing cards + checkout ============== */
     const PricingCards = () => {
@@ -375,10 +379,12 @@
               <div className="pc-badge">FLEXIBIL</div>
               <div className="pc-name">Abonament Lunar</div>
               <div className="pc-price">
-                <span className="pc-amount">€150</span>
+                <span style={{ fontSize: 20, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)', marginRight: 8 }}>€90</span>
+                <span className="pc-amount">€49,50</span>
                 <span className="pc-unit">/ lună</span>
+                <span style={{ display: 'inline-block', background: 'var(--gold-bg)', color: 'var(--gold)', fontSize: 12, fontWeight: 700, padding: '2px 8px', borderRadius: 10, marginLeft: 10, verticalAlign: 'middle' }}>−45%</span>
               </div>
-              <div className="pc-sub">TVA inclus · Acces complet · Actualizări incluse</div>
+              <div className="pc-sub"><b style={{color:'var(--gold)'}}>Ofertă limitată</b> · TVA inclus · Acces complet · Actualizări incluse</div>
               <ul className="pc-features">
                 <li><MIcon name="check" size={14} /> Până la 15 agenți (9 șabloane + personalizați)</li>
                 <li><MIcon name="check" size={14} /> Corpus juridic complet (5.000+ articole)</li>
@@ -399,10 +405,12 @@
               <div className="pc-badge">RECOMANDAT · CEL MAI BUN RAPORT</div>
               <div className="pc-name">Licență Perpetuă</div>
               <div className="pc-price">
-                <span className="pc-amount">€2.000</span>
+                <span style={{ fontSize: 20, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)', marginRight: 8 }}>€950</span>
+                <span className="pc-amount">€522,50</span>
                 <span className="pc-unit">o singură dată</span>
+                <span style={{ display: 'inline-block', background: 'var(--gold-bg)', color: 'var(--gold)', fontSize: 12, fontWeight: 700, padding: '2px 8px', borderRadius: 10, marginLeft: 10, verticalAlign: 'middle' }}>−45%</span>
               </div>
-              <div className="pc-sub">TVA inclus · Plătești o dată, folosești pentru totdeauna</div>
+              <div className="pc-sub"><b style={{color:'var(--gold)'}}>Ofertă limitată</b> · TVA inclus · Plătești o dată, folosești pentru totdeauna</div>
               <ul className="pc-features">
                 <li><MIcon name="check" size={14} /> Toate funcționalitățile abonamentului</li>
                 <li><MIcon name="check" size={14} /> Fără plăți recurente</li>
@@ -410,7 +418,7 @@
                 <li><MIcon name="check" size={14} /> Utilizatori nelimitați per instalare</li>
                 <li><MIcon name="check" size={14} /> Suport email prioritar 12 luni</li>
                 <li><MIcon name="check" size={14} /> Acces la toate versiunile viitoare</li>
-                <li><MIcon name="check" size={14} /><b style={{color:'var(--gold)'}}>Economisești față de 14 luni de abonament</b></li>
+                <li><MIcon name="check" size={14} /><b style={{color:'var(--gold)'}}>Economisești față de ~11 luni de abonament</b></li>
                 <li className="muted"><MIcon name="external" size={14} /> Cheie API Anthropic proprie (cost separat)</li>
               </ul>
               <button className="btn btn-primary btn-lg pc-cta" onClick={() => setCheckout('perpetual')}>
@@ -440,9 +448,10 @@
       const upd = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
       const planLabel = plan === 'monthly' ? 'Abonament Lunar' : 'Licență Perpetuă';
-      // Prices are VAT-inclusive final amounts (match Stripe). No tax is added on top.
-      const priceNet = plan === 'monthly' ? 150 : 2000;
-      const total = priceNet;
+      // VAT-inclusive amounts. A 45% Stripe promotion code (auto-applied via
+      // prefilled_promo_code) takes the regular price down to the promo price.
+      const priceRegular = plan === 'monthly' ? '90' : '950';
+      const priceLabel = plan === 'monthly' ? '49,50' : '522,50';
       const unit = plan === 'monthly' ? '/ lună' : 'o singură dată';
 
       const next = () => setStep(s => Math.min(s + 1, 4));
@@ -519,10 +528,11 @@
               {step === 3 && (
                 <>
                   <div className="order-summary">
-                    <div className="os-row"><span>{planLabel}</span><span>€{priceNet} {unit}</span></div>
+                    <div className="os-row"><span>{planLabel}</span><span style={{ textDecoration: 'line-through', opacity: 0.6 }}>€{priceRegular} {unit}</span></div>
+                    <div className="os-row"><span>Ofertă −45%</span><span>€{priceLabel} {unit}</span></div>
                     <div className="os-row"><span>{form.b2b ? 'TVA (inversare taxare)' : 'TVA'}</span><span>{form.b2b ? '€0' : 'inclus'}</span></div>
                     <div className="os-row divider"></div>
-                    <div className="os-row total"><span>Total</span><b>€{total}</b></div>
+                    <div className="os-row total"><span>Total</span><b>€{priceLabel} {unit}</b></div>
                   </div>
 
                   <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
@@ -572,13 +582,13 @@
                 <button className="btn btn-primary" onClick={onClose}>Închide</button>
               ) : step === 3 ? (
                 <a
-                  href={`${STRIPE_LINKS[plan]}?prefilled_email=${encodeURIComponent(form.email)}&client_reference_id=${plan}`}
+                  href={`${STRIPE_LINKS[plan]}?prefilled_email=${encodeURIComponent(form.email)}&client_reference_id=${plan}&prefilled_promo_code=${PROMO_CODE}`}
                   className="btn btn-primary"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setTimeout(onClose, 600)}
                 >
-                  Plătește €{total} prin Stripe
+                  Plătește €{priceLabel} prin Stripe
                   <MIcon name="arrow-right" size={13} />
                 </a>
               ) : (
@@ -598,9 +608,9 @@
     /* ============== Calculator ============== */
     const Calculator = () => {
       const [months, setMonths] = useState(18);
-      const monthlyCost = months * 150;
-      const perpetualCost = 2000;
-      const breakeven = 14;
+      const monthlyCost = months * 49.5; // promo price €49,50/lună
+      const perpetualCost = 522.5;        // promo price €522,50
+      const breakeven = 11;               // 522.5 / 49.5 ≈ 10.6
       const perpetualWins = months >= breakeven;
 
       return (
@@ -624,21 +634,21 @@
           <div className="calc-results">
             <div className={`calc-cell ${!perpetualWins ? 'win' : ''}`}>
               <div className="cc-label">Abonament Lunar</div>
-              <div className="cc-value">€{monthlyCost.toLocaleString('ro-RO')}</div>
-              <div className="cc-sub">{months} × €150 / lună</div>
+              <div className="cc-value">€{monthlyCost.toLocaleString('ro-RO', { maximumFractionDigits: 0 })}</div>
+              <div className="cc-sub">{months} × €49,50 / lună</div>
             </div>
             <div className={`calc-cell ${perpetualWins ? 'win' : ''}`}>
               <div className="cc-label">Licență Perpetuă</div>
-              <div className="cc-value">€{perpetualCost.toLocaleString('ro-RO')}</div>
+              <div className="cc-value">€522,50</div>
               <div className="cc-sub">o singură plată</div>
             </div>
           </div>
 
           <div className={`calc-verdict ${perpetualWins ? 'advantage' : ''}`}>
             {perpetualWins ? (
-              <>▸ La <b>{months} luni</b> de utilizare, licența perpetuă te economisește <b>€{(monthlyCost - perpetualCost).toLocaleString('ro-RO')}</b> față de abonament.</>
+              <>▸ La <b>{months} luni</b> de utilizare, licența perpetuă te economisește <b>€{(monthlyCost - perpetualCost).toLocaleString('ro-RO', { maximumFractionDigits: 0 })}</b> față de abonament.</>
             ) : (
-              <>▸ Pentru {months} {months === 1 ? 'lună' : 'luni'} de utilizare, abonamentul lunar e mai ieftin. Pragul de echilibru e la 14 luni.</>
+              <>▸ Pentru {months} {months === 1 ? 'lună' : 'luni'} de utilizare, abonamentul lunar e mai ieftin. Pragul de echilibru e la 11 luni.</>
             )}
           </div>
         </div>
@@ -651,7 +661,7 @@
     const FAQ_ITEMS = [
       {
         q: 'Include TVA?',
-        a: 'Da. Prețurile afișate sunt finale, cu TVA inclus — €150/lună, respectiv €2.000 pentru licența perpetuă, nu se adaugă nimic la plată. Pentru clienții UE B2B cu cod VAT valid se aplică inversarea taxării (factură fără TVA), conform legislației în vigoare.',
+        a: 'Da. Prețurile afișate sunt finale, cu TVA inclus. În oferta curentă (−45%) plătești €49,50/lună (de la €90) sau €522,50 pentru licența perpetuă (de la €950) — nu se adaugă nimic la plată. Pentru clienții UE B2B cu cod VAT valid se aplică inversarea taxării (factură fără TVA), conform legislației în vigoare.',
       },
       {
         q: 'Pot testa înainte de cumpărare?',
@@ -679,7 +689,7 @@
       },
       {
         q: 'Pot trece de la abonament la licență perpetuă?',
-        a: 'Da. Lunile plătite în primele 12 luni se deduc din prețul licenței perpetue (1:1 până la maxim €2.000). Practic, primul an de abonament se convertește integral în licență.',
+        a: 'Da. Contactează-ne și deducem o parte din abonamentul deja plătit din prețul licenței perpetue. Îți facem o ofertă personalizată în funcție de câte luni ai plătit.',
       },
     ];
 

@@ -203,7 +203,7 @@ async function handleInvoiceUpcoming(invoice, resend) {
   const renewalDate = invoice.next_payment_attempt
     ? new Date(invoice.next_payment_attempt * 1000).toLocaleDateString('ro-RO', { day: 'numeric', month: 'long', year: 'numeric' })
     : 'în curând';
-  const amount = invoice.amount_due ? `€${(invoice.amount_due / 100).toFixed(0)}` : '€150';
+  const amount = invoice.amount_due ? `€${(invoice.amount_due / 100).toFixed(2)}` : '€49,50';
 
   const subject = 'Abonamentul LEX AI se reînnoiește în 3 zile';
   const bodyNote = `Abonamentul tău se va reînnoi automat pe <b style="color:#F0F0F0;">${renewalDate}</b> cu suma de <b style="color:#F0F0F0;">${amount}</b>. Nu este necesară nicio acțiune — plata se procesează automat.`;
@@ -230,7 +230,7 @@ async function handlePaymentFailed(invoice, resend) {
   if (!email) return;
 
   const subject = 'Plata LEX AI a eșuat — actualizați metoda de plată';
-  const bodyNote = `Plata de <b style="color:#F0F0F0;">€${(invoice.amount_due / 100).toFixed(0)}</b> nu a putut fi procesată. Accesul la LEX AI va fi suspendat dacă plata nu este reluată. Deschideți aplicația LEX AI → <b style="color:#F0F0F0;">Setări → Gestionează abonamentul</b> pentru a actualiza metoda de plată.`;
+  const bodyNote = `Plata de <b style="color:#F0F0F0;">€${(invoice.amount_due / 100).toFixed(2)}</b> nu a putut fi procesată. Accesul la LEX AI va fi suspendat dacă plata nu este reluată. Deschideți aplicația LEX AI → <b style="color:#F0F0F0;">Setări → Gestionează abonamentul</b> pentru a actualiza metoda de plată.`;
 
   console.log(`[webhook] invoice.payment_failed: email=${email}`);
 

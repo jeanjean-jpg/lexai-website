@@ -50,8 +50,8 @@ offline".
 
 ## Pricing
 
-- Monthly subscription: EUR 150 / month (VAT included). Cancel anytime. Updates included.
-- Perpetual license: EUR 2,000 one-time (VAT included). Lifetime free updates. Best value; pays for itself vs monthly at ~14 months.
+- Monthly subscription: EUR 90 / month (VAT included). Cancel anytime. Updates included. Current limited offer: 45% off -> EUR 49.50 / month.
+- Perpetual license: EUR 950 one-time (VAT included). Lifetime free updates. Best value; pays for itself vs monthly at ~11 months. Current limited offer: 45% off -> EUR 522.50.
 - Free trial: 14 days, all features, no card required.
 - The Anthropic API key is separate — the firm uses its own key and pays
   Anthropic directly based on usage (roughly EUR 10–40 / month for a typical firm).
