@@ -97,7 +97,7 @@
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.7);
       backdrop-filter: blur(6px);
-      z-index: 200;
+      z-index: 1000;
       display: grid; place-items: center;
       padding: 24px;
       animation: fade-in 0.2s ease;
@@ -533,7 +533,17 @@
       };
       const back = () => { setError(''); setStep(s => Math.max(s - 1, 1)); };
 
-      return (
+      // Lock the page behind the modal so it can't scroll over the popup.
+      useEffect(() => {
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => { document.body.style.overflow = prev; };
+      }, []);
+
+      // Portal to <body> so the modal escapes the pricing section's stacking
+      // context (.container is position:relative;z-index:1, which otherwise
+      // lets later sections paint over this fixed modal on scroll).
+      return ReactDOM.createPortal(
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
           <div className="modal">
             <div className="modal-head">
@@ -687,7 +697,8 @@
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       );
     };
 
