@@ -65,6 +65,33 @@
     }
     .compare-note b { color: var(--gold); }
 
+    /* Corner discount ribbon (top-right of each price card). A small clipping
+       wrapper keeps it tucked into the rounded corner without hiding the
+       top-left "RECOMANDAT" badge (which overflows the card's top edge). */
+    .pc-ribbon-wrap {
+      position: absolute;
+      top: 0; right: 0;
+      width: 132px; height: 132px;
+      overflow: hidden;
+      border-top-right-radius: 12px;
+      pointer-events: none;
+      z-index: 3;
+    }
+    .pc-ribbon {
+      position: absolute;
+      top: 30px; right: -44px;
+      width: 180px;
+      transform: rotate(45deg);
+      text-align: center;
+      background: var(--gold);
+      color: #1a1308;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      padding: 8px 0;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+    }
+
     /* Checkout modal */
     .modal-backdrop {
       position: fixed; inset: 0;
@@ -376,13 +403,13 @@
           <div className="pricing-grid">
             {/* Monthly */}
             <div className="price-card">
+              <div className="pc-ribbon-wrap"><div className="pc-ribbon">−45%</div></div>
               <div className="pc-badge">FLEXIBIL</div>
               <div className="pc-name">Abonament Lunar</div>
               <div className="pc-price">
-                <span style={{ fontSize: 20, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)', marginRight: 8 }}>€90</span>
+                <span style={{ fontSize: 22, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)' }}>€90</span>
                 <span className="pc-amount">€49,50</span>
                 <span className="pc-unit">/ lună</span>
-                <span style={{ display: 'inline-block', background: 'var(--gold-bg)', color: 'var(--gold)', fontSize: 12, fontWeight: 700, padding: '2px 8px', borderRadius: 10, marginLeft: 10, verticalAlign: 'middle' }}>−45%</span>
               </div>
               <div className="pc-sub"><b style={{color:'var(--gold)'}}>Ofertă limitată</b> · TVA inclus · Acces complet · Actualizări incluse</div>
               <ul className="pc-features">
@@ -402,13 +429,13 @@
 
             {/* Perpetual */}
             <div className="price-card recommended">
+              <div className="pc-ribbon-wrap"><div className="pc-ribbon">−45%</div></div>
               <div className="pc-badge">RECOMANDAT · CEL MAI BUN RAPORT</div>
               <div className="pc-name">Licență Perpetuă</div>
               <div className="pc-price">
-                <span style={{ fontSize: 20, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)', marginRight: 8 }}>€950</span>
+                <span style={{ fontSize: 22, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)' }}>€950</span>
                 <span className="pc-amount">€522,50</span>
                 <span className="pc-unit">o singură dată</span>
-                <span style={{ display: 'inline-block', background: 'var(--gold-bg)', color: 'var(--gold)', fontSize: 12, fontWeight: 700, padding: '2px 8px', borderRadius: 10, marginLeft: 10, verticalAlign: 'middle' }}>−45%</span>
               </div>
               <div className="pc-sub"><b style={{color:'var(--gold)'}}>Ofertă limitată</b> · TVA inclus · Plătești o dată, folosești pentru totdeauna</div>
               <ul className="pc-features">
@@ -436,16 +463,17 @@
     /* ============== Checkout modal ============== */
     const CheckoutModal = ({ plan, onClose }) => {
       const [step, setStep] = useState(1);
+      const [error, setError] = useState('');
       const [form, setForm] = useState({
         email: '',
         firm: '',
-        b2b: false,
         cui: '',
         address: '',
         contact: '',
         method: 'card', // card | transfer
       });
-      const upd = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+      const upd = (k) => (e) => { setForm({ ...form, [k]: e.target.value }); if (error) setError(''); };
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       const planLabel = plan === 'monthly' ? 'Abonament Lunar' : 'Licență Perpetuă';
       // VAT-inclusive amounts. A 45% Stripe promotion code (auto-applied via
@@ -454,8 +482,23 @@
       const priceLabel = plan === 'monthly' ? '49,50' : '522,50';
       const unit = plan === 'monthly' ? '/ lună' : 'o singură dată';
 
-      const next = () => setStep(s => Math.min(s + 1, 4));
-      const back = () => setStep(s => Math.max(s - 1, 1));
+      const next = () => {
+        // Step 1 requires a valid email (the license is delivered there) and a
+        // cabinet name before checkout can proceed.
+        if (step === 1) {
+          if (!form.email.trim() || !EMAIL_RE.test(form.email.trim())) {
+            setError('Introdu o adresă de email validă — pe ea primești licența.');
+            return;
+          }
+          if (!form.firm.trim()) {
+            setError('Introdu numele cabinetului.');
+            return;
+          }
+        }
+        setError('');
+        setStep(s => Math.min(s + 1, 4));
+      };
+      const back = () => { setError(''); setStep(s => Math.max(s - 1, 1)); };
 
       return (
         <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
@@ -486,22 +529,22 @@
                 </div>
               </div>
 
+              {error && (
+                <div style={{ background: 'rgba(200,70,70,0.1)', border: '1px solid rgba(200,70,70,0.35)', color: '#e08a8a', borderRadius: 6, padding: '10px 14px', fontSize: 13, marginBottom: 16 }}>
+                  {error}
+                </div>
+              )}
+
               {/* Step 1: Details */}
               {step === 1 && (
                 <>
                   <div className="form-field">
-                    <label>Email pentru livrare licență</label>
-                    <input type="email" placeholder="avocat@cabinet.ro" value={form.email} onChange={upd('email')} />
+                    <label>Email pentru livrare licență *</label>
+                    <input type="email" required placeholder="avocat@cabinet.ro" value={form.email} onChange={upd('email')} />
                   </div>
                   <div className="form-field">
-                    <label>Numele cabinetului</label>
-                    <input type="text" placeholder="ex. Popescu &amp; Asociații SCA" value={form.firm} onChange={upd('firm')} />
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 0', fontSize: 13, color: 'var(--text-muted)' }}>
-                    <input id="b2b" type="checkbox" checked={form.b2b} onChange={(e) => setForm({ ...form, b2b: e.target.checked })} style={{ accentColor: 'var(--gold)' }} />
-                    <label htmlFor="b2b" style={{ fontFamily: 'inherit', fontSize: 13, color: 'var(--text)', textTransform: 'none', letterSpacing: 0, margin: 0, cursor: 'pointer' }}>
-                      Facturare B2B cu inversare taxare (UE, cod VAT valid)
-                    </label>
+                    <label>Numele cabinetului *</label>
+                    <input type="text" required placeholder="ex. Popescu &amp; Asociații SCA" value={form.firm} onChange={upd('firm')} />
                   </div>
                 </>
               )}
@@ -510,8 +553,8 @@
               {step === 2 && (
                 <>
                   <div className="form-field">
-                    <label>{form.b2b ? 'Cod VAT' : 'CUI'} {form.b2b && <span style={{ color: 'var(--text-faint)' }}>(necesar pentru inversare taxare)</span>}</label>
-                    <input type="text" placeholder={form.b2b ? 'RO12345678 / DE123456789' : 'RO12345678'} value={form.cui} onChange={upd('cui')} />
+                    <label>CUI</label>
+                    <input type="text" placeholder="RO12345678" value={form.cui} onChange={upd('cui')} />
                   </div>
                   <div className="form-field">
                     <label>Adresă fiscală</label>
@@ -530,7 +573,7 @@
                   <div className="order-summary">
                     <div className="os-row"><span>{planLabel}</span><span style={{ textDecoration: 'line-through', opacity: 0.6 }}>€{priceRegular} {unit}</span></div>
                     <div className="os-row"><span>Ofertă −45%</span><span>€{priceLabel} {unit}</span></div>
-                    <div className="os-row"><span>{form.b2b ? 'TVA (inversare taxare)' : 'TVA'}</span><span>{form.b2b ? '€0' : 'inclus'}</span></div>
+                    <div className="os-row"><span>TVA</span><span>inclus</span></div>
                     <div className="os-row divider"></div>
                     <div className="os-row total"><span>Total</span><b>€{priceLabel} {unit}</b></div>
                   </div>
