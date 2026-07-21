@@ -50,8 +50,9 @@ offline".
 
 ## Pricing
 
-- Monthly subscription: EUR 90 / month (VAT included). Cancel anytime. Updates included. Current limited offer: 45% off -> EUR 49.50 / month.
-- Perpetual license: EUR 950 one-time (VAT included). Lifetime free updates. Best value; pays for itself vs monthly at ~11 months. Current limited offer: 45% off -> EUR 522.50.
+- Monthly subscription: 470 RON / month (~EUR 90), VAT included. Cancel anytime. Updates included. Current limited offer: 45% off -> 258.50 RON / month (~EUR 49.50).
+- Perpetual license: 4,970 RON one-time (~EUR 950), VAT included. Lifetime free updates. Best value; pays for itself vs monthly at ~11 months. Current limited offer: 45% off -> 2,733.50 RON (~EUR 522.50).
+- Prices are shown in RON for the Romanian market; Stripe presents RON or EUR at checkout based on the customer's location.
 - Free trial: 14 days, all features, no card required.
 - The Anthropic API key is separate — the firm uses its own key and pays
   Anthropic directly based on usage (roughly EUR 10–40 / month for a typical firm).

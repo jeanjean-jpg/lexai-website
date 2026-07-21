@@ -406,11 +406,12 @@
               <div className="pc-ribbon-wrap"><div className="pc-ribbon">−45%</div></div>
               <div className="pc-badge">FLEXIBIL</div>
               <div className="pc-name">Abonament Lunar</div>
+              <div style={{ fontSize: 18, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)' }}>470 RON</div>
               <div className="pc-price">
-                <span style={{ fontSize: 22, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)' }}>€90</span>
-                <span className="pc-amount">€49,50</span>
-                <span className="pc-unit">/ lună</span>
+                <span className="pc-amount">258,50</span>
+                <span className="pc-unit">RON / lună</span>
               </div>
+              <div style={{ fontSize: 12.5, color: 'var(--text-dim)', marginTop: 2 }}>≈ €49,50 / lună</div>
               <div className="pc-sub"><b style={{color:'var(--gold)'}}>Ofertă limitată</b> · TVA inclus · Acces complet · Actualizări incluse</div>
               <ul className="pc-features">
                 <li><MIcon name="check" size={14} /> Până la 15 agenți (9 șabloane + personalizați)</li>
@@ -432,11 +433,12 @@
               <div className="pc-ribbon-wrap"><div className="pc-ribbon">−45%</div></div>
               <div className="pc-badge">RECOMANDAT · CEL MAI BUN RAPORT</div>
               <div className="pc-name">Licență Perpetuă</div>
+              <div style={{ fontSize: 18, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)' }}>4.970 RON</div>
               <div className="pc-price">
-                <span style={{ fontSize: 22, textDecoration: 'line-through', opacity: 0.5, color: 'var(--text-muted)' }}>€950</span>
-                <span className="pc-amount">€522,50</span>
-                <span className="pc-unit">o singură dată</span>
+                <span className="pc-amount">2.733,50</span>
+                <span className="pc-unit">RON</span>
               </div>
+              <div style={{ fontSize: 12.5, color: 'var(--text-dim)', marginTop: 2 }}>o singură dată · ≈ €522,50</div>
               <div className="pc-sub"><b style={{color:'var(--gold)'}}>Ofertă limitată</b> · TVA inclus · Plătești o dată, folosești pentru totdeauna</div>
               <ul className="pc-features">
                 <li><MIcon name="check" size={14} /> Toate funcționalitățile abonamentului</li>
@@ -478,8 +480,12 @@
       const planLabel = plan === 'monthly' ? 'Abonament Lunar' : 'Licență Perpetuă';
       // VAT-inclusive amounts. A 45% Stripe promotion code (auto-applied via
       // prefilled_promo_code) takes the regular price down to the promo price.
-      const priceRegular = plan === 'monthly' ? '90' : '950';
-      const priceLabel = plan === 'monthly' ? '49,50' : '522,50';
+      // Prices shown in RON (primary for the Romanian audience) with the EUR
+      // equivalent as a reference. Stripe presents RON or EUR at checkout by
+      // the customer's location (Adaptive Pricing).
+      const priceRegular = plan === 'monthly' ? '470 RON' : '4.970 RON';
+      const priceLabel = plan === 'monthly' ? '258,50 RON' : '2.733,50 RON';
+      const priceEur = plan === 'monthly' ? '€49,50' : '€522,50';
       const unit = plan === 'monthly' ? '/ lună' : 'o singură dată';
 
       const next = () => {
@@ -571,11 +577,12 @@
               {step === 3 && (
                 <>
                   <div className="order-summary">
-                    <div className="os-row"><span>{planLabel}</span><span style={{ textDecoration: 'line-through', opacity: 0.6 }}>€{priceRegular} {unit}</span></div>
-                    <div className="os-row"><span>Ofertă −45%</span><span>€{priceLabel} {unit}</span></div>
+                    <div className="os-row"><span>{planLabel}</span><span style={{ textDecoration: 'line-through', opacity: 0.6 }}>{priceRegular} {unit}</span></div>
+                    <div className="os-row"><span>Ofertă −45%</span><span>{priceLabel} {unit}</span></div>
                     <div className="os-row"><span>TVA</span><span>inclus</span></div>
                     <div className="os-row divider"></div>
-                    <div className="os-row total"><span>Total</span><b>€{priceLabel} {unit}</b></div>
+                    <div className="os-row total"><span>Total</span><b>{priceLabel} {unit}</b></div>
+                    <div className="os-row" style={{ opacity: 0.65 }}><span>≈ echivalent</span><span>{priceEur} {unit}</span></div>
                   </div>
 
                   <div style={{ textAlign: 'center', padding: '8px 0 4px' }}>
@@ -589,7 +596,7 @@
                       <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, lineHeight: 1.6 }}>
                         Veți fi redirecționat la Stripe. Cheia de licență se trimite automat pe{' '}
                         <b style={{ color: 'var(--gold)' }}>{form.email || 'email-ul introdus'}</b>{' '}
-                        imediat după confirmarea plății. Stripe acceptă card, transfer bancar și alte metode locale.
+                        imediat după confirmarea plății. Prețul se afișează în RON sau EUR în funcție de localizarea ta. Stripe acceptă card, transfer bancar și alte metode locale.
                       </p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', letterSpacing: '0.06em' }}>
@@ -631,7 +638,7 @@
                   rel="noopener noreferrer"
                   onClick={() => setTimeout(onClose, 600)}
                 >
-                  Plătește €{priceLabel} prin Stripe
+                  Plătește prin Stripe
                   <MIcon name="arrow-right" size={13} />
                 </a>
               ) : (
@@ -651,10 +658,11 @@
     /* ============== Calculator ============== */
     const Calculator = () => {
       const [months, setMonths] = useState(18);
-      const monthlyCost = months * 49.5; // promo price €49,50/lună
-      const perpetualCost = 522.5;        // promo price €522,50
-      const breakeven = 11;               // 522.5 / 49.5 ≈ 10.6
+      const monthlyCost = months * 258.5; // promo price 258,50 RON/lună
+      const perpetualCost = 2733.5;        // promo price 2.733,50 RON
+      const breakeven = 11;                // 2733.5 / 258.5 ≈ 10.6
       const perpetualWins = months >= breakeven;
+      const ron = (n) => n.toLocaleString('ro-RO', { maximumFractionDigits: 2 });
 
       return (
         <div className="calc">
@@ -677,19 +685,19 @@
           <div className="calc-results">
             <div className={`calc-cell ${!perpetualWins ? 'win' : ''}`}>
               <div className="cc-label">Abonament Lunar</div>
-              <div className="cc-value">€{monthlyCost.toLocaleString('ro-RO', { maximumFractionDigits: 2 })}</div>
-              <div className="cc-sub">{months} × €49,50 / lună</div>
+              <div className="cc-value">{ron(monthlyCost)} RON</div>
+              <div className="cc-sub">{months} × 258,50 RON / lună</div>
             </div>
             <div className={`calc-cell ${perpetualWins ? 'win' : ''}`}>
               <div className="cc-label">Licență Perpetuă</div>
-              <div className="cc-value">€522,50</div>
+              <div className="cc-value">2.733,50 RON</div>
               <div className="cc-sub">o singură plată</div>
             </div>
           </div>
 
           <div className={`calc-verdict ${perpetualWins ? 'advantage' : ''}`}>
             {perpetualWins ? (
-              <>▸ La <b>{months} luni</b> de utilizare, licența perpetuă te economisește <b>€{(monthlyCost - perpetualCost).toLocaleString('ro-RO', { maximumFractionDigits: 2 })}</b> față de abonament.</>
+              <>▸ La <b>{months} luni</b> de utilizare, licența perpetuă te economisește <b>{ron(monthlyCost - perpetualCost)} RON</b> față de abonament.</>
             ) : (
               <>▸ Pentru {months} {months === 1 ? 'lună' : 'luni'} de utilizare, abonamentul lunar e mai ieftin. Pragul de echilibru e la 11 luni.</>
             )}
@@ -704,7 +712,7 @@
     const FAQ_ITEMS = [
       {
         q: 'Include TVA?',
-        a: 'Da. Prețurile afișate sunt finale, cu TVA inclus. În oferta curentă (−45%) plătești €49,50/lună (de la €90) sau €522,50 pentru licența perpetuă (de la €950) — nu se adaugă nimic la plată. Pentru clienții UE B2B cu cod VAT valid se aplică inversarea taxării (factură fără TVA), conform legislației în vigoare.',
+        a: 'Da. Prețurile afișate sunt finale, cu TVA inclus. În oferta curentă (−45%) plătești 258,50 RON/lună (de la 470 RON) sau 2.733,50 RON pentru licența perpetuă (de la 4.970 RON) — echivalent ≈ €49,50/lună, respectiv ≈ €522,50. Nu se adaugă nimic la plată. La checkout, Stripe afișează prețul în RON sau EUR în funcție de localizare. Pentru clienții UE B2B cu cod VAT valid se aplică inversarea taxării, conform legislației în vigoare.',
       },
       {
         q: 'Pot testa înainte de cumpărare?',
