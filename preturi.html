@@ -110,7 +110,10 @@
       width: 100%;
       max-width: 560px;
       max-height: 90vh;
-      overflow-y: auto;
+      max-height: 90dvh;            /* accounts for mobile browser UI / keyboard */
+      display: flex;
+      flex-direction: column;       /* head + scrollable body + pinned footer */
+      overflow: hidden;             /* the body scrolls, not the whole modal */
       box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(220,180,60,0.2);
       animation: modal-in 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
@@ -119,6 +122,7 @@
       display: flex; justify-content: space-between; align-items: center;
       padding: 18px 24px;
       border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
     .modal-head h3 { font-size: 16px; }
     .modal-head .close {
@@ -129,7 +133,7 @@
       display: grid; place-items: center;
     }
     .modal-head .close:hover { background: var(--bg-3); color: var(--text); }
-    .modal-body { padding: 24px; }
+    .modal-body { padding: 24px; overflow-y: auto; flex: 1 1 auto; min-height: 0; }
 
     /* Stepper */
     .stepper {
@@ -251,6 +255,7 @@
       border-top: 1px solid var(--border);
       display: flex; gap: 10px;
       background: var(--bg-2);
+      flex-shrink: 0;
     }
 
     /* IBAN block (transfer) */
@@ -302,7 +307,10 @@
       /* Fix (was targeting non-existent .checkout-modal): give the modal room
          on small screens and stop the 4 stepper labels from overlapping. */
       .modal-backdrop { padding: 10px; }
-      .modal { max-width: 100%; max-height: 94vh; }
+      .modal { max-width: 100%; max-height: 94vh; max-height: 94dvh; }
+      /* iOS Safari zooms into inputs with font-size < 16px, which blows up the
+         layout on focus. 16px stops that. */
+      .form-field input, .form-field select { font-size: 16px; }
       .modal-head { padding: 14px 16px; }
       .modal-body { padding: 16px; }
       .stepper { gap: 5px; margin-bottom: 18px; }
