@@ -65,6 +65,7 @@ offline".
 - Download / free trial: https://lexai.software/descarcare
 - Help: https://lexai.software/ajutor
 - FAQ: https://lexai.software/intrebari-frecvente
+- Data handling / confidentiality: https://lexai.software/confidentialitate
 - Contact & support: https://lexai.software/contact (form + WhatsApp)
 
 ## Contact

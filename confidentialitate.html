@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEX·AI — Cum îți sunt tratate datele</title>
+  <meta name="description" content="Cum tratează LEX AI datele cabinetului: dosarele și fișierele rămân pe calculatorul tău, nu pe un server LEX AI. La întrebare se trimite doar fragmentul necesar către modelul AI, cu cheia API proprie. Transparent și mai confidențial decât un SaaS cloud." />
+  <link rel="canonical" href="https://lexai.software/confidentialitate" />
+
+  <!-- FAQ structured data (kept in sync with the visible list below) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "inLanguage": "ro",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Fișierele mele ajung pe un server LEX AI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nu. Fișierele, dosarele și baza de date rămân într-o bază de date locală, pe calculatorul tău. LEX AI nu are un server care stochează documentele cabinetului — nu le încărcăm și nu le păstrăm nicăieri." }
+      },
+      {
+        "@type": "Question",
+        "name": "Atunci cum răspunde AI-ul, dacă nu vede documentele?",
+        "acceptedAnswer": { "@type": "Answer", "text": "La fiecare întrebare, aplicația citește documentele de pe discul tău, extrage doar fragmentul relevant acelei întrebări și îl trimite direct de pe calculatorul tău către API-ul modelului AI (Anthropic). Nu se trimite toată arhiva și nu se stochează nimic central." }
+      },
+      {
+        "@type": "Question",
+        "name": "Ce se trimite exact și când?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Doar textul necesar unei întrebări, în momentul în care pui întrebarea — nu în fundal, nu permanent. După ce răspunsul revine, nimic nu rămâne stocat pe vreun server LEX AI." }
+      },
+      {
+        "@type": "Question",
+        "name": "Anthropic păstrează sau învață din datele mele?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Anthropic nu folosește datele trimise prin API pentru a antrena modelele, iar retenția este limitată (cu opțiuni de retenție zero pentru organizații). Folosești cheia API proprie a cabinetului, deci ai o relație directă cu Anthropic — LEX AI nu este intermediar care vede sau păstrează datele." }
+      },
+      {
+        "@type": "Question",
+        "name": "LEX AI este complet offline?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nu, și nu susținem asta. Ca orice asistent AI performant, are nevoie de conexiune pentru a interoga modelul AI. Diferența este că documentele se stochează local, iar către model pleacă doar textul necesar, direct de pe calculatorul tău — nu prin serverele noastre." }
+      },
+      {
+        "@type": "Question",
+        "name": "De ce e mai confidențial decât un tool juridic în cloud?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Un tool în cloud stochează, prin definiție, toate dosarele pe serverul lui, permanent. LEX AI nu stochează nimic central: datele rămân la tine, iar la interogare pleacă doar strictul necesar, cu cheia ta API." }
+      }
+    ]
+  }
+  </script>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="demos.css" />
+  <style>
+    .conf-wrap { max-width: 860px; margin: 0 auto; }
+
+    /* Two-column "what stays / what is sent" */
+    .conf-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .conf-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 22px 20px;
+    }
+    .conf-card.stay { border-color: var(--gold-soft); }
+    .conf-card h3 { font-size: 15px; display: flex; align-items: center; gap: 9px; margin: 0 0 12px; }
+    .conf-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 9px; }
+    .conf-card li { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; display: flex; gap: 9px; align-items: flex-start; }
+    .conf-card li svg { flex-shrink: 0; margin-top: 2px; }
+
+    /* 3-step flow */
+    .conf-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: stretch; gap: 12px; margin: 8px 0; }
+    .conf-step {
+      background: var(--bg-1); border: 1px solid var(--border); border-radius: 10px;
+      padding: 18px 16px; text-align: center;
+    }
+    .conf-step .conf-ico {
+      width: 42px; height: 42px; margin: 0 auto 12px; border-radius: 10px;
+      background: var(--gold-bg); border: 1px solid var(--gold-soft);
+      display: grid; place-items: center; color: var(--gold);
+    }
+    .conf-step h4 { font-size: 13.5px; margin: 0 0 6px; color: var(--text); }
+    .conf-step p { font-size: 12.5px; color: var(--text-muted); margin: 0; line-height: 1.5; }
+    .conf-arrow { display: grid; place-items: center; color: var(--text-dim); }
+
+    /* Honest callout */
+    .conf-note {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--bg-2); border: 1px dashed var(--border-strong);
+      border-radius: 10px; padding: 16px 18px;
+    }
+    .conf-note svg { flex-shrink: 0; color: var(--gold); margin-top: 2px; }
+    .conf-note p { margin: 0; font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
+    .conf-note b { color: var(--text); }
+
+    /* FAQ */
+    .conf-faq { display: flex; flex-direction: column; gap: 8px; }
+    .faq-item { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .faq-q {
+      width: 100%; text-align: left; padding: 16px 18px; background: transparent; border: 0;
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+      font-size: 14.5px; font-weight: 500; color: var(--text); cursor: pointer; transition: background 0.15s;
+    }
+    .faq-q:hover { background: var(--bg-2); }
+    .faq-q .faq-icon { color: var(--gold); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-q .faq-icon { transform: rotate(45deg); }
+    .faq-a { padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; font-size: 13.5px; color: var(--text-muted); line-height: 1.7; }
+    .faq-item.open .faq-a { padding: 0 18px 18px; max-height: 500px; }
+
+    @media (max-width: 720px) {
+      .conf-two { grid-template-columns: 1fr; }
+      .conf-flow { grid-template-columns: 1fr; }
+      .conf-arrow { transform: rotate(90deg); padding: 2px 0; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <!-- Header -->
+  <section style="padding: 80px 0 24px; text-align: center;">
+    <div class="container-narrow">
+      <div class="kicker" style="justify-content: center; display: inline-flex;">Confidențialitate · LEX AI</div>
+      <h1 style="margin-top: 16px;">Datele dosarelor rămân pe calculatorul tău.</h1>
+      <p class="lead" style="max-width: 620px; margin: 16px auto 0;">
+        Transparent, fără marketing: îți arătăm exact unde stau datele cabinetului și ce se trimite
+        către modelul AI atunci când pui o întrebare.
+      </p>
+    </div>
+  </section>
+
+  <!-- What stays / what is sent -->
+  <section style="padding: 16px 0;">
+    <div class="container">
+      <div class="conf-wrap">
+        <div class="conf-two">
+          <div class="conf-card stay">
+            <h3><span id="ico-lock"></span> Ce rămâne pe calculatorul tău</h3>
+            <ul id="stay-list"></ul>
+          </div>
+          <div class="conf-card">
+            <h3><span id="ico-send"></span> Ce se trimite la model — și când</h3>
+            <ul id="send-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-step flow -->
+  <section style="padding: 40px 0 16px;">
+    <div class="container">
+      <div class="conf-wrap">
+        <div class="section-heading" style="margin-bottom: 24px;">
+          <div class="kicker">Cum funcționează, pas cu pas</div>
+          <h2>Local implicit. La model, doar strictul necesar.</h2>
+        </div>
+        <div id="flow-root"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Honest note -->
+  <section style="padding: 24px 0;">
+    <div class="container">
+      <div class="conf-wrap">
+        <div id="note-root"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section style="padding: 24px 0; background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="conf-wrap">
+        <div class="section-heading" style="margin-bottom: 20px;">
+          <div class="kicker">Comparație</div>
+          <h2>Față de un instrument juridic în cloud</h2>
+        </div>
+        <div class="conf-two">
+          <div class="conf-card">
+            <h3 style="color: var(--text-muted);">Instrument în cloud (clasic)</h3>
+            <ul id="cmp-cloud"></ul>
+          </div>
+          <div class="conf-card stay">
+            <h3 style="color: var(--gold);">LEX AI</h3>
+            <ul id="cmp-lex"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="padding: 48px 0;">
+    <div class="container">
+      <div class="conf-wrap">
+        <div class="section-heading" style="margin-bottom: 22px;">
+          <div class="kicker">Întrebări frecvente · confidențialitate</div>
+          <h2>Răspunsuri clare.</h2>
+        </div>
+        <div id="faq-root" class="conf-faq"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container-narrow">
+      <h2>Vezi singur — 14 zile gratuit.</h2>
+      <p>Datele rămân la tine de la primul minut. Fără card.</p>
+      <div class="hero-ctas">
+        <a href="/descarcare" class="btn btn-primary btn-lg">Descarcă pentru Windows</a>
+        <a href="/contact" class="btn btn-ghost btn-lg">Întrebări despre confidențialitate</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+
+  <script type="text/babel">
+    const { useState } = React;
+    const { Nav, Footer, MIcon } = window;
+
+    ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="confidentialitate" />);
+    ReactDOM.createRoot(document.getElementById('footer-root')).render(<Footer />);
+
+    // Header icons
+    ReactDOM.createRoot(document.getElementById('ico-lock')).render(<span style={{color:'var(--gold)'}}><MIcon name="lock" size={16} /></span>);
+    ReactDOM.createRoot(document.getElementById('ico-send')).render(<span style={{color:'var(--gold)'}}><MIcon name="globe" size={16} /></span>);
+
+    const check = () => <MIcon name="check" size={14} color="var(--gold)" />;
+
+    ReactDOM.createRoot(document.getElementById('stay-list')).render(
+      <>
+        <li>{check()} Documentele, dosarele și baza de date — salvate local, pe calculatorul tău</li>
+        <li>{check()} Cheia API, criptată pe dispozitiv</li>
+        <li>{check()} <b style={{color:'var(--text)'}}>LEX AI nu are un server care stochează fișierele cabinetului</b> — nu le încărcăm și nu le păstrăm</li>
+      </>
+    );
+    ReactDOM.createRoot(document.getElementById('send-list')).render(
+      <>
+        <li>{check()} Doar fragmentul de text necesar unei întrebări — nu toată arhiva</li>
+        <li>{check()} Trimis <b style={{color:'var(--text)'}}>direct de pe calculatorul tău</b> către API-ul Anthropic, cu cheia cabinetului</li>
+        <li>{check()} Doar în momentul întrebării — nu în fundal, nu permanent</li>
+      </>
+    );
+
+    // 3-step flow
+    const Flow = () => (
+      <div className="conf-flow">
+        <div className="conf-step">
+          <div className="conf-ico"><MIcon name="folder" size={20} /></div>
+          <h4>1 · Local</h4>
+          <p>Documentele și dosarele stau pe calculatorul tău, într-o bază de date locală.</p>
+        </div>
+        <div className="conf-arrow"><MIcon name="arrow-right" size={18} /></div>
+        <div className="conf-step">
+          <div className="conf-ico"><MIcon name="cpu" size={20} /></div>
+          <h4>2 · Întrebare</h4>
+          <p>Pui o întrebare. Aplicația extrage doar fragmentul relevant și îl trimite direct la Anthropic, cu cheia ta.</p>
+        </div>
+        <div className="conf-arrow"><MIcon name="arrow-right" size={18} /></div>
+        <div className="conf-step">
+          <div className="conf-ico"><MIcon name="check-circle" size={20} /></div>
+          <h4>3 · Răspuns</h4>
+          <p>Răspunsul revine în aplicație. Nimic nu rămâne stocat pe vreun server LEX AI.</p>
+        </div>
+      </div>
+    );
+    ReactDOM.createRoot(document.getElementById('flow-root')).render(<Flow />);
+
+    // Honest note
+    ReactDOM.createRoot(document.getElementById('note-root')).render(
+      <div className="conf-note">
+        <MIcon name="alert" size={18} />
+        <p>
+          <b>Ce NU spunem:</b> LEX AI nu este „complet offline". Ca orice asistent AI performant, are nevoie
+          să trimită textul necesar către model pentru a putea răspunde. Diferența e că <b>nu stocăm nimic pe un
+          server</b> și trimitem <b>doar strictul necesar, doar la momentul întrebării</b> — direct de pe
+          calculatorul tău, cu cheia API a cabinetului. Anthropic nu antrenează pe datele din API și oferă
+          retenție limitată, cu opțiuni de retenție zero.
+        </p>
+      </div>
+    );
+
+    // Comparison lists
+    const x = () => <MIcon name="x" size={14} color="var(--red)" />;
+    ReactDOM.createRoot(document.getElementById('cmp-cloud')).render(
+      <>
+        <li>{x()} Dosarele sunt stocate pe serverul furnizorului, permanent</li>
+        <li>{x()} Datele cabinetului trec prin infrastructura furnizorului</li>
+        <li>{x()} Depinzi de securitatea și disponibilitatea acelui server</li>
+      </>
+    );
+    ReactDOM.createRoot(document.getElementById('cmp-lex')).render(
+      <>
+        <li>{check()} Nimic stocat central — dosarele rămân pe calculatorul tău</li>
+        <li>{check()} La model pleacă doar fragmentul necesar, doar la interogare</li>
+        <li>{check()} Cheia API e a ta — relație directă cu Anthropic</li>
+      </>
+    );
+
+    // FAQ
+    const FAQ_ITEMS = [
+      { q: 'Fișierele mele ajung pe un server LEX AI?', a: <>Nu. Fișierele, dosarele și baza de date rămân într-o bază de date locală, pe calculatorul tău. <b>LEX AI nu are un server care stochează documentele cabinetului</b> — nu le încărcăm și nu le păstrăm nicăieri.</> },
+      { q: 'Atunci cum răspunde AI-ul, dacă nu vede documentele?', a: <>La fiecare întrebare, aplicația citește documentele de pe discul tău, extrage <b>doar fragmentul relevant</b> acelei întrebări și îl trimite direct de pe calculatorul tău către API-ul modelului AI (Anthropic). Nu se trimite toată arhiva și nu se stochează nimic central.</> },
+      { q: 'Ce se trimite exact și când?', a: <>Doar textul necesar unei întrebări, <b>în momentul</b> în care pui întrebarea — nu în fundal, nu permanent. După ce răspunsul revine, nimic nu rămâne stocat pe vreun server LEX AI.</> },
+      { q: 'Anthropic păstrează sau învață din datele mele?', a: <>Anthropic <b>nu folosește datele din API pentru a antrena modelele</b>, iar retenția este limitată (cu opțiuni de retenție zero pentru organizații). Folosești cheia API proprie a cabinetului, deci ai o relație directă cu Anthropic — LEX AI nu este intermediar care vede sau păstrează datele.</> },
+      { q: 'LEX AI este complet offline?', a: <>Nu, și nu susținem asta. Are nevoie de conexiune pentru a interoga modelul AI. Dar documentele se <b>stochează local</b>, iar către model pleacă <b>doar textul necesar</b>, direct de pe calculatorul tău — nu prin serverele noastre.</> },
+      { q: 'De ce e mai confidențial decât un tool în cloud?', a: <>Un tool în cloud stochează, prin definiție, toate dosarele pe serverul lui, permanent. LEX AI <b>nu stochează nimic central</b>: datele rămân la tine, iar la interogare pleacă doar strictul necesar, cu cheia ta API.</> },
+    ];
+    const FAQ = () => {
+      const [open, setOpen] = useState(0);
+      return (
+        <>
+          {FAQ_ITEMS.map((item, i) => (
+            <div key={i} className={`faq-item ${open === i ? 'open' : ''}`}>
+              <button className="faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
+                <span>{item.q}</span>
+                <span className="faq-icon"><MIcon name="plus" size={16} stroke={2} /></span>
+              </button>
+              <div className="faq-a">{item.a}</div>
+            </div>
+          ))}
+        </>
+      );
+    };
+    ReactDOM.createRoot(document.getElementById('faq-root')).render(<FAQ />);
+  </script>
+</body>
+</html>

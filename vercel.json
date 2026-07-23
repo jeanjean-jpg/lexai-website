@@ -8,7 +8,8 @@
     { "source": "/ajutor", "destination": "/ajutor.html" },
     { "source": "/descarcare", "destination": "/descarcare.html" },
     { "source": "/contact", "destination": "/contact.html" },
-    { "source": "/intrebari-frecvente", "destination": "/intrebari-frecvente.html" }
+    { "source": "/intrebari-frecvente", "destination": "/intrebari-frecvente.html" },
+    { "source": "/confidentialitate", "destination": "/confidentialitate.html" }
   ],
   "headers": [
     {

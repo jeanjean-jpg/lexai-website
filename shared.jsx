@@ -291,7 +291,7 @@ const Footer = () => (
             <li><a href="/ajutor">Documentație</a></li>
             <li><a href="/intrebari-frecvente">Întrebări frecvente</a></li>
             <li><a href="/ajutor#agenti">Ghid agenți</a></li>
-            <li><a href="/ajutor#confidentialitate">Confidențialitate</a></li>
+            <li><a href="/confidentialitate">Confidențialitate</a></li>
           </ul>
         </div>
         <div className="footer-col">
