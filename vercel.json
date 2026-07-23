@@ -9,7 +9,9 @@
     { "source": "/descarcare", "destination": "/descarcare.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/intrebari-frecvente", "destination": "/intrebari-frecvente.html" },
-    { "source": "/confidentialitate", "destination": "/confidentialitate.html" }
+    { "source": "/confidentialitate", "destination": "/confidentialitate.html" },
+    { "source": "/politica-confidentialitate", "destination": "/politica-confidentialitate.html" },
+    { "source": "/termeni", "destination": "/termeni.html" }
   ],
   "headers": [
     {

@@ -298,9 +298,9 @@ const Footer = () => (
           <h5>Companie</h5>
           <ul>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="#">Politica de confidențialitate</a></li>
-            <li><a href="#">Termeni și condiții</a></li>
-            <li><a href="#">GDPR</a></li>
+            <li><a href="/politica-confidentialitate">Politica de confidențialitate</a></li>
+            <li><a href="/termeni">Termeni și condiții</a></li>
+            <li><a href="/politica-confidentialitate#gdpr">GDPR</a></li>
           </ul>
         </div>
       </div>
