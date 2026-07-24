@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/api/updates/:path*", "destination": "/api/updates?path=:path*" },
     { "source": "/preturi", "destination": "/preturi.html" },
+    { "source": "/parteneri", "destination": "/parteneri.html" },
     { "source": "/functionalitati", "destination": "/functionalitati.html" },
     { "source": "/ajutor", "destination": "/ajutor.html" },
     { "source": "/descarcare", "destination": "/descarcare.html" },

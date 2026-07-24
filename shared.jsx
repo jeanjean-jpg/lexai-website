@@ -220,6 +220,7 @@ const Nav = ({ active }) => {
     { id: 'functionalitati', label: 'Funcționalități', href: '/functionalitati' },
     { id: 'ajutor',          label: 'Ajutor',          href: '/ajutor' },
     { id: 'preturi',         label: 'Prețuri',         href: '/preturi' },
+    { id: 'parteneri',       label: 'Parteneri',       href: '/parteneri' },
     { id: 'descarcare',      label: 'Descarcă',        href: '/descarcare' },
     { id: 'contact',         label: 'Contact',         href: '/contact' },
   ];
@@ -298,6 +299,7 @@ const Footer = () => (
           <h5>Companie</h5>
           <ul>
             <li><a href="/contact">Contact</a></li>
+            <li><a href="/parteneri">Parteneri</a></li>
             <li><a href="/politica-confidentialitate">Politica de confidențialitate</a></li>
             <li><a href="/termeni">Termeni și condiții</a></li>
             <li><a href="/politica-confidentialitate#gdpr">GDPR</a></li>

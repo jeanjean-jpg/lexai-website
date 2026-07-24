@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEX·AI — Parteneri · Avocați care folosesc LEX AI</title>
+  <meta name="description" content="Avocați și cabinete din România care folosesc LEX AI în activitatea de zi cu zi. Profiluri, arii de practică și experiența lor cu asistentul juridic AI construit pentru dreptul român." />
+  <link rel="canonical" href="https://lexai.software/parteneri" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="demos.css" />
+  <style>
+    .partners-wrap { max-width: 900px; margin: 0 auto; }
+
+    .partner-card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 30px 30px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-bottom: 26px;
+    }
+
+    /* Header: avatar + identity */
+    .partner-head { display: flex; gap: 20px; align-items: flex-start; }
+    .partner-avatar {
+      width: 72px; height: 72px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-soft);
+      color: var(--gold);
+      display: grid; place-items: center;
+      font-size: 24px; font-weight: 600; letter-spacing: 1px;
+      overflow: hidden;
+    }
+    .partner-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .partner-id { flex: 1; min-width: 0; }
+    .partner-id-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .partner-id h3 { font-size: 19px; margin: 0; color: var(--text); }
+    .partner-role { font-size: 13.5px; color: var(--text-muted); margin: 4px 0 0; }
+
+    .lex-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--gold-bg); border: 1px solid var(--gold-soft);
+      color: var(--gold); font-size: 11.5px; font-weight: 600;
+      padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+      text-transform: uppercase; letter-spacing: 0.4px;
+    }
+
+    .partner-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; }
+    .partner-meta span {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12.5px; color: var(--text-muted);
+    }
+    .partner-meta svg { flex-shrink: 0; color: var(--text-dim); }
+
+    /* Testimonial quote */
+    .partner-quote {
+      position: relative;
+      background: var(--bg-2);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px 18px 22px;
+      font-size: 15px; line-height: 1.65; color: var(--text);
+      font-style: italic;
+    }
+    .partner-quote::before {
+      content: "\201C";
+      position: absolute; top: 2px; left: 10px;
+      font-size: 40px; line-height: 1; color: var(--gold-soft);
+      font-family: Georgia, serif;
+    }
+
+    /* Practice-area tags */
+    .partner-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .partner-tag {
+      font-size: 12px; color: var(--text-muted);
+      background: var(--bg-2); border: 1px solid var(--border);
+      padding: 5px 11px; border-radius: 8px;
+    }
+
+    /* Contact row */
+    .partner-contact {
+      display: flex; flex-wrap: wrap; gap: 10px 20px;
+      padding-top: 18px; border-top: 1px solid var(--border);
+    }
+    .partner-contact a, .partner-contact span.pc-item {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13.5px; color: var(--text-muted); text-decoration: none;
+      transition: color 0.15s;
+    }
+    .partner-contact a:hover { color: var(--gold); }
+    .partner-contact svg { flex-shrink: 0; color: var(--gold); }
+
+    /* Join CTA card */
+    .partner-join {
+      background: var(--bg-1); border: 1px dashed var(--border-strong);
+      border-radius: 16px; padding: 30px; text-align: center;
+      max-width: 900px; margin: 0 auto;
+    }
+    .partner-join h3 { font-size: 18px; margin: 0 0 8px; }
+    .partner-join p { font-size: 14px; color: var(--text-muted); margin: 0 auto 18px; max-width: 520px; line-height: 1.6; }
+
+    @media (max-width: 640px) {
+      .partner-card { padding: 24px 20px 22px; }
+      .partner-head { gap: 16px; }
+      .partner-avatar { width: 60px; height: 60px; font-size: 20px; }
+      .partner-id h3 { font-size: 17px; }
+      .partner-quote { font-size: 14px; }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="nav-root"></div>
+
+  <!-- Header -->
+  <section style="padding: 80px 0 24px; text-align: center;">
+    <div class="container-narrow">
+      <div class="kicker" style="justify-content: center; display: inline-flex;">Parteneri · LEX AI</div>
+      <h1 style="margin-top: 16px;">Avocați care lucrează cu LEX AI.</h1>
+      <p class="lead" style="max-width: 640px; margin: 16px auto 0;">
+        Cabinete din România care folosesc LEX AI în activitatea de zi cu zi — pentru redactare mai rapidă,
+        analiză de dosar și răspunsuri ancorate în legislația română.
+      </p>
+    </div>
+  </section>
+
+  <!-- Partners list -->
+  <section style="padding: 24px 0 8px;">
+    <div class="container">
+      <div class="partners-wrap">
+        <div id="partners-root"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Join CTA -->
+  <section style="padding: 24px 0 8px;">
+    <div class="container">
+      <div class="partner-join">
+        <h3>Ești avocat și folosești LEX AI?</h3>
+        <p>Dacă vrei să apari pe această pagină ca partener, scrie-ne câteva rânduri despre experiența ta.
+          Ne bucurăm să prezentăm cabinetele care lucrează cu noi.</p>
+        <a href="/contact" class="btn btn-primary">Contactează-ne</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container-narrow">
+      <h2>Încearcă LEX AI — 14 zile gratuit.</h2>
+      <p>Același asistent juridic pe care îl folosesc avocații de mai sus. Fără card.</p>
+      <div class="hero-ctas">
+        <a href="/descarcare" class="btn btn-primary btn-lg">Descarcă pentru Windows</a>
+        <a href="/preturi" class="btn btn-ghost btn-lg">Vezi prețurile</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-root"></div>
+
+  <script type="text/babel" src="shared.jsx"></script>
+
+  <script type="text/babel">
+    const { Nav, Footer, MIcon } = window;
+
+    ReactDOM.createRoot(document.getElementById('nav-root')).render(<Nav active="parteneri" />);
+    ReactDOM.createRoot(document.getElementById('footer-root')).render(<Footer />);
+
+    /* ------------------------------------------------------------------
+       PARTNERS DATA — to add a new collaborating lawyer, copy one object
+       and fill it in. `photo: null` renders the initials monogram; set a
+       photo path (e.g. "/parteneri/nume.jpg") to show a real headshot.
+       Order in this array = order on the page.
+    ------------------------------------------------------------------- */
+    const PARTNERS = [
+      {
+        name: 'Av. Ionela Vasile',
+        initials: 'IV',
+        photo: null,
+        role: 'Cabinet de avocatură · București',
+        location: 'București, Sector 3',
+        bar: 'Baroul București',
+        experience: '20+ ani experiență',
+        tags: ['Drept penal', 'Drept civil', 'Dreptul familiei', 'Drept comercial', 'Moșteniri și partaje', 'Dreptul muncii'],
+        quote: 'LEX AI mi-a schimbat ritmul de lucru. Redactez actele mult mai repede, iar răspunsurile sunt bine documentate și ancorate în legislația română — le pot verifica pe articole. Îmi economisește ore bune în fiecare săptămână, fără să pierd controlul asupra dosarului.',
+        website: 'https://avocat-ionela-vasile.ro/',
+        websiteLabel: 'avocat-ionela-vasile.ro',
+        phone: '+40 726 005 306',
+        email: 'contact@avocat-ionela-vasile.ro',
+      },
+      {
+        name: 'Av. Maria Țuca',
+        initials: 'MȚ',
+        photo: null,
+        role: 'Cabinet Individual de Avocat · Timișoara',
+        location: 'Timișoara (Timiș, Arad, Caraș-Severin)',
+        bar: 'Baroul Timiș',
+        experience: '16+ ani experiență',
+        tags: ['Dreptul familiei', 'Drept civil', 'Drept imobiliar', 'Succesiuni', 'Litigii civile'],
+        quote: 'Pentru un cabinet individual, timpul este totul. Cu LEX AI pregătesc cererile și analizez dosarele considerabil mai rapid, iar rezultatul este de încredere și ușor de folosit mai departe. A devenit parte din fluxul meu zilnic de lucru.',
+        website: 'https://www.tucamaria.ro/',
+        websiteLabel: 'tucamaria.ro',
+        phone: null,
+        email: null,
+      },
+    ];
+
+    const PartnerCard = ({ p }) => (
+      <div className="partner-card">
+        <div className="partner-head">
+          <div className="partner-avatar">
+            {p.photo ? <img src={p.photo} alt={p.name} /> : p.initials}
+          </div>
+          <div className="partner-id">
+            <div className="partner-id-top">
+              <h3>{p.name}</h3>
+              <span className="lex-badge"><MIcon name="sparkles" size={12} /> Folosește LEX AI</span>
+            </div>
+            <p className="partner-role">{p.role}</p>
+            <div className="partner-meta">
+              <span><MIcon name="globe" size={13} /> {p.location}</span>
+              <span><MIcon name="scales" size={13} /> {p.bar}</span>
+              <span><MIcon name="briefcase" size={13} /> {p.experience}</span>
+            </div>
+          </div>
+        </div>
+
+        <blockquote className="partner-quote">{p.quote}</blockquote>
+
+        <div className="partner-tags">
+          {p.tags.map((t, i) => <span key={i} className="partner-tag">{t}</span>)}
+        </div>
+
+        <div className="partner-contact">
+          {p.website && (
+            <a href={p.website} target="_blank" rel="noopener noreferrer">
+              <MIcon name="external" size={14} /> {p.websiteLabel}
+            </a>
+          )}
+          {p.phone && (
+            <a href={`tel:${p.phone.replace(/\s/g, '')}`}>
+              <MIcon name="chat" size={14} /> {p.phone}
+            </a>
+          )}
+          {p.email && (
+            <a href={`mailto:${p.email}`}>
+              <MIcon name="mail" size={14} /> {p.email}
+            </a>
+          )}
+        </div>
+      </div>
+    );
+
+    const Partners = () => (
+      <>
+        {PARTNERS.map((p, i) => <PartnerCard key={i} p={p} />)}
+      </>
+    );
+
+    ReactDOM.createRoot(document.getElementById('partners-root')).render(<Partners />);
+  </script>
+</body>
+</html>

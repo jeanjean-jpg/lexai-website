@@ -62,6 +62,7 @@ offline".
 - Home: https://lexai.software
 - Features: https://lexai.software/functionalitati
 - Pricing: https://lexai.software/preturi
+- Partners (Romanian lawyers using LEX AI): https://lexai.software/parteneri
 - Download / free trial: https://lexai.software/descarcare
 - Help: https://lexai.software/ajutor
 - FAQ: https://lexai.software/intrebari-frecvente
